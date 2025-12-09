@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PozorDomStoreService.Domain\PozorDomStoreService.Domain.csproj" />
+    <ProjectReference Include="..\PozorDomStoreService.Infrastructure\PozorDomStoreService.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

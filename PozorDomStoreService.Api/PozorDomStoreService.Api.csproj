@@ -14,4 +14,11 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PozorDomStoreService.Application\PozorDomStoreService.Application.csproj" />
+    <ProjectReference Include="..\PozorDomStoreService.Domain\PozorDomStoreService.Domain.csproj" />
+    <ProjectReference Include="..\PozorDomStoreService.Infrastructure\PozorDomStoreService.Infrastructure.csproj" />
+    <ProjectReference Include="..\PozorDomStoreService.Persistence\PozorDomStoreService.Persistence.csproj" />
+  </ItemGroup>
+
 </Project>
