@@ -6,8 +6,8 @@ namespace PozorDomStoreService.Domain.Interfaces.Services
     {
         Task<Guid> CreateHubAsync(string name, double price);
         Task<List<HubEntity>> GetAllHubAsync();
-        Task<HubEntity?> GetHubByIdAsync(Guid id);
-        Task UpdateHubeAsync(Guid id, string name, double price);
+        Task<HubEntity> GetHubByIdAsync(Guid id);
+        Task UpdateHubAsync(Guid id, string name, double price);
         Task DeleteHubAsync(Guid id);
     }
 }

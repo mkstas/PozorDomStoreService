@@ -27,7 +27,7 @@ namespace PozorDomStoreService.Application.Services
             return devices;
         }
 
-        public async Task<DeviceEntity?> GetDeviceByIdAsync(Guid id)
+        public async Task<DeviceEntity> GetDeviceByIdAsync(Guid id)
         {
             return await _deviceRepository.GetByIdAsync(id)
                 ?? throw new NotFoundException("Device not found.");

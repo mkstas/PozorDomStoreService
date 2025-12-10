@@ -6,7 +6,7 @@ namespace PozorDomStoreService.Domain.Interfaces.Services
     {
         Task<Guid> CreateDeviceAsync(Guid deviceTypeId, string name, double price);
         Task<List<DeviceEntity>> GetAllDeviceAsync();
-        Task<DeviceEntity?> GetDeviceByIdAsync(Guid id);
+        Task<DeviceEntity> GetDeviceByIdAsync(Guid id);
         Task UpdateDeviceAsync(Guid id, Guid deviceTypeId, string name, double price);
         Task DeleteDeviceAsync(Guid id);
     }

@@ -27,13 +27,13 @@ namespace PozorDomStoreService.Application.Services
             return hubs;
         }
 
-        public async Task<HubEntity?> GetHubByIdAsync(Guid id)
+        public async Task<HubEntity> GetHubByIdAsync(Guid id)
         {
             return await _hubRepository.GetByIdAsync(id)
                 ?? throw new NotFoundException("Hub not found.");
         }
 
-        public async Task UpdateHubeAsync(Guid id, string name, double price)
+        public async Task UpdateHubAsync(Guid id, string name, double price)
         {
             var rows = await _hubRepository.UpdateAsync(id, name, price);
 
