@@ -6,7 +6,7 @@ using PozorDomStoreService.Domain.Interfaces.Services;
 namespace PozorDomStoreService.Api.Controllers
 {
     [ApiController]
-    [Route("api/hubs")]
+    [Route("api/v1/store/hubs")]
     public class HubsController(
         IHubService hubService) : ControllerBase
     {

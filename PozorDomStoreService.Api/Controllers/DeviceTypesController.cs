@@ -6,7 +6,7 @@ using PozorDomStoreService.Domain.Interfaces.Services;
 namespace PozorDomStoreService.Api.Controllers
 {
     [ApiController]
-    [Route("api/device-types")]
+    [Route("api/v1/store/device-types")]
     public class DeviceTypesController(
         IDeviceTypeService deviceTypeService) : ControllerBase
     {

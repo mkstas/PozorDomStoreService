@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Dockerfile" />
+  </Folder>
   <Project Path="PozorDomStoreService.Api/PozorDomStoreService.Api.csproj" />
   <Project Path="PozorDomStoreService.Application/PozorDomStoreService.Application.csproj" />
   <Project Path="PozorDomStoreService.Domain/PozorDomStoreService.Domain.csproj" />
