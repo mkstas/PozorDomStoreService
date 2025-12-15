@@ -14,7 +14,10 @@ namespace PozorDomStoreService.Api.Controllers
         [HttpPost]
         public async Task<IResult> CreateDevice([FromBody] CreateDeviceRequest request)
         {
-            var result = await _deviceService.CreateDeviceAsync(request.DeviceTypeId, request.Name, request.Price);
+            if (!Guid.TryParse(request.DeviceTypeId, out Guid deviceTypeId))
+                return Results.BadRequest("Invalid DeviceTypeId format.");
+
+            var result = await _deviceService.CreateDeviceAsync(deviceTypeId, request.Name, request.Price);
 
             return Results.Created($"/api/devices/{result}", result);
         }
@@ -41,7 +44,10 @@ namespace PozorDomStoreService.Api.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IResult> UpdateDevice([FromRoute] Guid id, [FromBody] UpdateDeviceRequest request)
         {
-            await _deviceService.UpdateDeviceAsync(id, request.DeviceTypeId, request.Name, request.Price);
+            if (!Guid.TryParse(request.DeviceTypeId, out Guid deviceTypeId))
+                return Results.BadRequest("Invalid DeviceTypeId format.");
+
+            await _deviceService.UpdateDeviceAsync(id, deviceTypeId, request.Name, request.Price);
 
             return Results.NoContent();
         }

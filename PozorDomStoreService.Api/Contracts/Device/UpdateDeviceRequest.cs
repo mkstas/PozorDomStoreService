@@ -5,7 +5,7 @@ namespace PozorDomStoreService.Api.Contracts.Device
     public record UpdateDeviceRequest(
         [Required(ErrorMessage = "DeviceTypeId is required.")]
         [StringLength(36, ErrorMessage = "DeviceTypeId length must be 36 characters (GUID format).")]
-        Guid DeviceTypeId,
+        string DeviceTypeId,
 
         [Required(ErrorMessage = "Name is required.")]
         [MaxLength(128, ErrorMessage = "Name cannot exceed 128 characters.")]
