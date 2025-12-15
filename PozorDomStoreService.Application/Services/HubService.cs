@@ -1,4 +1,4 @@
-﻿using PozorDomAuthService.Infrastructure.Exceptions;
+﻿using PozorDomStoreService.Infrastructure.Exceptions;
 using PozorDomStoreService.Domain.Entities;
 using PozorDomStoreService.Domain.Interfaces.Repositories;
 using PozorDomStoreService.Domain.Interfaces.Services;
@@ -20,9 +20,7 @@ namespace PozorDomStoreService.Application.Services
             var hubs = await _hubRepository.GetAllAsync();
 
             if (hubs.Count == 0)
-            {
                 throw new NotFoundException("Hubs not found.");
-            }
 
             return hubs;
         }
@@ -38,9 +36,7 @@ namespace PozorDomStoreService.Application.Services
             var rows = await _hubRepository.UpdateAsync(id, name, price);
 
             if (rows == 0)
-            {
                 throw new NotFoundException("Hub not found.");
-            }
         }
 
         public async Task DeleteHubAsync(Guid id)
@@ -48,9 +44,7 @@ namespace PozorDomStoreService.Application.Services
             var rows = await _hubRepository.DeleteAsync(id);
 
             if (rows == 0)
-            {
                 throw new NotFoundException("Hub not found.");
-            }
         }
     }
 }

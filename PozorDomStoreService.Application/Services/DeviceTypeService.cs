@@ -1,4 +1,4 @@
-﻿using PozorDomAuthService.Infrastructure.Exceptions;
+﻿using PozorDomStoreService.Infrastructure.Exceptions;
 using PozorDomStoreService.Domain.Entities;
 using PozorDomStoreService.Domain.Interfaces.Repositories;
 using PozorDomStoreService.Domain.Interfaces.Services;
@@ -20,16 +20,14 @@ namespace PozorDomStoreService.Application.Services
             var deviceTypes = await _deviceTypeRepository.GetAllAsync();
 
             if (deviceTypes.Count == 0)
-            {
                 throw new NotFoundException("Device types not found.");
-            }
 
             return deviceTypes;
         }
 
-        public Task<DeviceTypeEntity> GetDeviceTypeByIdAsync(Guid id)
+        public async Task<DeviceTypeEntity> GetDeviceTypeByIdAsync(Guid id)
         {
-            return _deviceTypeRepository.GetByIdAsync(id)
+            return await _deviceTypeRepository.GetByIdAsync(id)
                 ?? throw new NotFoundException("Device type not found.");
         }
 
@@ -38,9 +36,7 @@ namespace PozorDomStoreService.Application.Services
             var rows = await _deviceTypeRepository.UpdateAsync(id, name);
 
             if (rows == 0)
-            {
                 throw new NotFoundException("Device type not found.");
-            }
         }
 
         public async Task DeleteDeviceTypeAsync(Guid id)
@@ -48,9 +44,7 @@ namespace PozorDomStoreService.Application.Services
             var rows = await _deviceTypeRepository.DeleteAsync(id);
 
             if (rows == 0)
-            {
                 throw new NotFoundException("Device type not found.");
-            }
         }
     }
 }
