@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddDatabaseContext(builder.Configuration);
+builder.Services.AddCorsConfiguration(builder.Configuration);
 
 builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
@@ -26,5 +27,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseGlobalExceptionHandler();
+app.UseCors();
 app.MapControllers();
 app.Run();
