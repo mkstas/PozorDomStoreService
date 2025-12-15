@@ -16,14 +16,14 @@ namespace PozorDomStoreService.Api.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var origins = configuration.GetSection("AllowedOrigins").Get<string[]>()
+            var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>()
                 ?? throw new InvalidOperationException("AllowedOrigins not configured.");
 
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins(origins)
+                    policy.WithOrigins(allowedOrigins)
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
@@ -35,13 +35,13 @@ namespace PozorDomStoreService.Api.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var connection = configuration.GetConnectionString(nameof(PozorDomStoreServiceDbContext))
+            var connectionString = configuration.GetConnectionString(nameof(PozorDomStoreServiceDbContext))
                 ?? throw new InvalidOperationException("Database connection string not configured.");
 
             services.AddDbContext<PozorDomStoreServiceDbContext>(
                 options =>
                 {
-                    options.UseNpgsql(connection);
+                    options.UseNpgsql(connectionString);
                 });
         }
     }
