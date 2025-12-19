@@ -12,6 +12,12 @@ namespace PozorDomStoreService.Api.Extensions
             builder.UseMiddleware<GlobalExceptionHandler>();
         }
 
+        public static void UseUserAuthHeadersHandler(
+            this IApplicationBuilder builder)
+        {
+            builder.UseMiddleware<UserAuthHeadersHandler>();
+        }
+
         public static void AddCorsConfiguration(
             this IServiceCollection services,
             IConfiguration configuration)

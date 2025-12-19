@@ -28,6 +28,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseGlobalExceptionHandler();
+app.UseUserAuthHeadersHandler();
 app.UseCors();
 app.MapControllers();
 app.Run();
