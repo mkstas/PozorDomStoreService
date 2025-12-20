@@ -26,7 +26,9 @@ namespace PozorDomStoreService.Api.Middlewares
                 context.Response.StatusCode = ex switch
                 {
                     NotFoundException _ => (int)HttpStatusCode.NotFound,
+                    ConflictException _ => (int)HttpStatusCode.Conflict,
                     UnauthorizedAccessException _ => (int)HttpStatusCode.Unauthorized,
+                    InternalServerException _ => (int)HttpStatusCode.InternalServerError,
                     _ => (int)HttpStatusCode.InternalServerError,
                 };
 
