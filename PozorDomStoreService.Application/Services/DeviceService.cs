@@ -12,12 +12,12 @@ namespace PozorDomStoreService.Application.Services
         private readonly IDeviceTypeRepository _deviceTypeRepository = deviceTypeRepository;
         private readonly IDeviceRepository _deviceRepository = deviceRepository;
 
-        public async Task<Guid> CreateDeviceAsync(Guid deviceTypeId, string name, double price)
+        public async Task<Guid> CreateDeviceAsync(Guid deviceTypeId, string name, string description, string imageUrl, double price)
         {
             var deviceType = await _deviceTypeRepository.GetByIdAsync(deviceTypeId)
                 ?? throw new NotFoundException("Device type does not existing.");
 
-            return await _deviceRepository.CreateAsync(deviceType.Id, name, price);
+            return await _deviceRepository.CreateAsync(deviceType.Id, name, description, imageUrl, price);
         }
 
         public async Task<List<DeviceEntity>> GetAllDeviceAsync()
@@ -36,12 +36,12 @@ namespace PozorDomStoreService.Application.Services
                 ?? throw new NotFoundException("Device not found.");
         }
 
-        public async Task UpdateDeviceAsync(Guid id, Guid deviceTypeId, string name, double price)
+        public async Task UpdateDeviceAsync(Guid id, Guid deviceTypeId, string name, string description, string imageUrl, double price)
         {
             var deviceType = await _deviceTypeRepository.GetByIdAsync(deviceTypeId)
                 ?? throw new NotFoundException("Device type does not existing.");
 
-            var rows = await _deviceRepository.UpdateAsync(id, deviceType.Id, name, price);
+            var rows = await _deviceRepository.UpdateAsync(id, deviceType.Id, name, description, imageUrl, price);
 
             if (rows == 0)
                 throw new NotFoundException("Device not found.");

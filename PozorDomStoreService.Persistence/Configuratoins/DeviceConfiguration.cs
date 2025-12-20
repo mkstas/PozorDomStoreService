@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PozorDomStoreService.Domain.Entities;
 
 namespace PozorDomStoreService.Persistence.Configuratoins
 {
     public class DeviceConfiguration : IEntityTypeConfiguration<DeviceEntity>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<DeviceEntity> builder)
+        public void Configure(EntityTypeBuilder<DeviceEntity> builder)
         {
             builder.HasKey(d => d.Id);
 
@@ -20,6 +21,14 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.Property(d => d.Name)
                    .IsRequired()
                    .HasMaxLength(128);
+
+            builder.Property(d => d.Description)
+                   .HasDefaultValue(string.Empty)
+                   .HasMaxLength(1024);
+
+            builder.Property(d => d.ImageUrl)
+                   .HasDefaultValue(string.Empty)
+                   .HasMaxLength(256);
 
             builder.Property(d => d.Price)
                    .IsRequired();

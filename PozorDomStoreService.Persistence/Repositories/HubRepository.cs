@@ -8,10 +8,16 @@ namespace PozorDomStoreService.Persistence.Repositories
     {
         private readonly PozorDomStoreServiceDbContext _context = context;
 
-        public async Task<Guid> CreateAsync(string name, double price)
+        public async Task<Guid> CreateAsync(string name, string description, string imageUrl, double price)
         {
-            var hub = new HubEntity(
-                Guid.NewGuid(), name, price);
+            var hub = new HubEntity
+            {
+                Id = Guid.NewGuid(),
+                Name = name,
+                Description = description,
+                ImageUrl = imageUrl,
+                Price = price,
+            };
 
             await _context.Hubs.AddAsync(hub);
             await _context.SaveChangesAsync();
@@ -33,12 +39,14 @@ namespace PozorDomStoreService.Persistence.Repositories
                 .FirstOrDefaultAsync(h => h.Id == id);
         }
 
-        public async Task<int> UpdateAsync(Guid id, string name, double price)
+        public async Task<int> UpdateAsync(Guid id, string name, string description, string imageUrl, double price)
         {
             return await _context.Devices
                 .Where(h => h.Id == id)
                 .ExecuteUpdateAsync(setters => setters
                     .SetProperty(h => h.Name, name)
+                    .SetProperty(h => h.Description, description)
+                    .SetProperty(h => h.ImageUrl, imageUrl)
                     .SetProperty(h => h.Price, price));
         }
 

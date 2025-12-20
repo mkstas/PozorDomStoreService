@@ -10,8 +10,11 @@ namespace PozorDomStoreService.Persistence.Repositories
 
         public async Task<Guid> CreateAsync(string name)
         {
-            var deviceType = new DeviceTypeEntity(
-                Guid.NewGuid(), name);
+            var deviceType = new DeviceTypeEntity
+            {
+                Id = Guid.NewGuid(),
+                Name = name
+            };
 
             await _context.DeviceTypes.AddAsync(deviceType);
             await _context.SaveChangesAsync();

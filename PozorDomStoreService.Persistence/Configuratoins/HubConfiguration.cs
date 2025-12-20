@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PozorDomStoreService.Domain.Entities;
 
 namespace PozorDomStoreService.Persistence.Configuratoins
 {
     public class HubConfiguration : IEntityTypeConfiguration<HubEntity>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<HubEntity> builder)
+        public void Configure(EntityTypeBuilder<HubEntity> builder)
         {
             builder.HasKey(h => h.Id);
 
@@ -15,6 +16,14 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.Property(h => h.Name)
                    .IsRequired()
                    .HasMaxLength(128);
+
+            builder.Property(h => h.Description)
+                   .HasDefaultValue(string.Empty)
+                   .HasMaxLength(1024);
+
+            builder.Property(h => h.ImageUrl)
+                   .HasDefaultValue(string.Empty)
+                   .HasMaxLength(256);
 
             builder.Property(h => h.Price)
                    .IsRequired();

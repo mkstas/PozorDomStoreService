@@ -17,7 +17,8 @@ namespace PozorDomStoreService.Api.Controllers
             if (!Guid.TryParse(request.DeviceTypeId, out Guid deviceTypeId))
                 return Results.BadRequest("Invalid DeviceTypeId format.");
 
-            var result = await _deviceService.CreateDeviceAsync(deviceTypeId, request.Name, request.Price);
+            var result = await _deviceService.CreateDeviceAsync(
+                deviceTypeId, request.Name, request.Description, string.Empty, request.Price);
 
             return Results.Created($"/api/devices/{result}", result);
         }
@@ -27,7 +28,8 @@ namespace PozorDomStoreService.Api.Controllers
         {
             var result = await _deviceService.GetAllDeviceAsync();
             List<DeviceResponse> response =
-                [.. result.Select(d => new DeviceResponse(d.Id, d.DeviceTypeId, d.Name, d.Price))];
+                [.. result.Select(d => new DeviceResponse(
+                    d.Id, d.DeviceTypeId, d.Name, d.Description, d.ImageUrl, d.Price))];
 
             return Results.Ok(response);
         }
@@ -36,7 +38,8 @@ namespace PozorDomStoreService.Api.Controllers
         public async Task<IResult> GetDeviceById([FromRoute] Guid id)
         {
                 var result = await _deviceService.GetDeviceByIdAsync(id);
-                DeviceResponse response = new(result.Id, result.DeviceTypeId, result.Name, result.Price);
+                DeviceResponse response = 
+                    new(result.Id, result.DeviceTypeId, result.Name, result.Description, result.ImageUrl, result.Price);
 
                 return Results.Ok(response);
         }
@@ -47,7 +50,8 @@ namespace PozorDomStoreService.Api.Controllers
             if (!Guid.TryParse(request.DeviceTypeId, out Guid deviceTypeId))
                 return Results.BadRequest("Invalid DeviceTypeId format.");
 
-            await _deviceService.UpdateDeviceAsync(id, deviceTypeId, request.Name, request.Price);
+            await _deviceService.UpdateDeviceAsync(
+                id, deviceTypeId, request.Name, request.Description, string.Empty, request.Price);
 
             return Results.NoContent();
         }

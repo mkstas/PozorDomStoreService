@@ -5,7 +5,7 @@ using PozorDomStoreService.Domain.Interfaces.Services;
 namespace PozorDomStoreService.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/store/device-types")]
+    [Route("api/v1/store/device_types")]
     public class DeviceTypesController(
         IDeviceTypeService deviceTypeService) : ControllerBase
     {
@@ -16,7 +16,7 @@ namespace PozorDomStoreService.Api.Controllers
         {
             var result = await _deviceTypeService.CreateDeviceTypeAsync(request.Name);
 
-            return Results.Created($"/device-types/{result}", result);
+            return Results.Created($"/device_types/{result}", result);
         }
 
         [HttpGet]

@@ -1,9 +1,9 @@
 ﻿namespace PozorDomStoreService.Domain.Entities
 {
-    public class DeviceTypeEntity(Guid id, string name)
+    public class DeviceTypeEntity
     {
-        public Guid Id { get; set; } = id;
-        public string Name { get; set; } = name;
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public List<DeviceEntity> Devices { get; set; } = [];

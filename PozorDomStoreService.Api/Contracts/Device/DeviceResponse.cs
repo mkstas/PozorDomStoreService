@@ -4,6 +4,8 @@
         Guid Id,
         Guid DeviceTypeId,
         string Name,
+        string Description,
+        string ImageUrl,
         double Price
     );
 }

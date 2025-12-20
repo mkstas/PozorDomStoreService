@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PozorDomStoreService.Domain.Entities;
 
 namespace PozorDomStoreService.Persistence.Configuratoins
 {
     public class DeviceTypeConfiguration : IEntityTypeConfiguration<DeviceTypeEntity>
     {
-        public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<DeviceTypeEntity> builder)
+        public void Configure(EntityTypeBuilder<DeviceTypeEntity> builder)
         {
             builder.HasKey(dt => dt.Id);
 

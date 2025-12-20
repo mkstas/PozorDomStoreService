@@ -10,9 +10,9 @@ namespace PozorDomStoreService.Application.Services
     {
         private readonly IHubRepository _hubRepository = hubRepository;
 
-        public Task<Guid> CreateHubAsync(string name, double price)
+        public Task<Guid> CreateHubAsync(string name, string description, string imageUrl, double price)
         {
-            return _hubRepository.CreateAsync(name, price);
+            return _hubRepository.CreateAsync(name, description, imageUrl, price);
         }
 
         public async Task<List<HubEntity>> GetAllHubAsync()
@@ -31,9 +31,9 @@ namespace PozorDomStoreService.Application.Services
                 ?? throw new NotFoundException("Hub not found.");
         }
 
-        public async Task UpdateHubAsync(Guid id, string name, double price)
+        public async Task UpdateHubAsync(Guid id, string name, string description, string imageUrl, double price)
         {
-            var rows = await _hubRepository.UpdateAsync(id, name, price);
+            var rows = await _hubRepository.UpdateAsync(id, name, description, imageUrl, price);
 
             if (rows == 0)
                 throw new NotFoundException("Hub not found.");
