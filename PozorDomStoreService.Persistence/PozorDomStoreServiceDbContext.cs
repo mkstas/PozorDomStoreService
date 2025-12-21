@@ -12,6 +12,8 @@ namespace PozorDomStoreService.Persistence
         public DbSet<DeviceEntity> Devices { get; set; }
         public DbSet<SpecificationEntity> Specifications { get; set; }
         public DbSet<DeviceSpecificationEntity> DeviceSpecifications { get; set; }
+        public DbSet<CartEntity> Carts { get; set; }
+        public DbSet<CartDeviceEntity> CartDevices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,6 +21,9 @@ namespace PozorDomStoreService.Persistence
             modelBuilder.ApplyConfiguration(new DeviceTypeConfiguration());
             modelBuilder.ApplyConfiguration(new DeviceConfiguration());
             modelBuilder.ApplyConfiguration(new SpecificationConfiguration());
+            modelBuilder.ApplyConfiguration(new DeviceSpecificationConfiguration());
+            modelBuilder.ApplyConfiguration(new CartConfiguration());
+            modelBuilder.ApplyConfiguration(new CartDeviceConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

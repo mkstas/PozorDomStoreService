@@ -21,6 +21,10 @@ namespace PozorDomStoreService.Persistence.Configuratoins
                    .WithOne(ds => ds.Device)
                    .HasForeignKey(ds => ds.DeviceId);
 
+            builder.HasMany(d => d.CartDevices)
+                   .WithOne(cd => cd.Device)
+                   .HasForeignKey(cd => cd.DeviceId);
+
             builder.Property(d => d.Name)
                    .IsRequired()
                    .HasMaxLength(128);
