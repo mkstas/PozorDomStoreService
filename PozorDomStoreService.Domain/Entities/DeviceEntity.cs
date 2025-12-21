@@ -11,5 +11,6 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DeviceTypeEntity? DeviceType { get; set; }
+        public List<DeviceSpecificationEntity> DeviceSpecifications { get; set; } = [];
     }
 }

@@ -16,11 +16,13 @@ builder.Services.AddScoped<IHubRepository, HubRepository>();
 builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 builder.Services.AddScoped<ISpecificationRepository, SpecificationRepository>();
+builder.Services.AddScoped<IDeviceSpecificationRepository, DeviceSpecificationRepository>();
 
 builder.Services.AddScoped<IHubService, HubService>();
 builder.Services.AddScoped<IDeviceTypeService, DeviceTypeService>();
 builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<ISpecificationService, SpecificationService>();
+builder.Services.AddScoped<IDeviceSpecificationService, DeviceSpecificationService>();
 
 var app = builder.Build();
 

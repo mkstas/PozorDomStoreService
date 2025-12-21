@@ -11,6 +11,7 @@ namespace PozorDomStoreService.Persistence
         public DbSet<DeviceTypeEntity> DeviceTypes { get; set; }
         public DbSet<DeviceEntity> Devices { get; set; }
         public DbSet<SpecificationEntity> Specifications { get; set; }
+        public DbSet<DeviceSpecificationEntity> DeviceSpecifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

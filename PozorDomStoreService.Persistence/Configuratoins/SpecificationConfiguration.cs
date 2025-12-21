@@ -13,6 +13,10 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.Property(s => s.Id)
                    .ValueGeneratedOnAdd();
 
+            builder.HasMany(s => s.DeviceSpecifications)
+                   .WithOne(ds => ds.Specification)
+                   .HasForeignKey(ds => ds.SpecificationId);
+
             builder.Property(s => s.Name)
                    .IsRequired()
                    .HasMaxLength(128);

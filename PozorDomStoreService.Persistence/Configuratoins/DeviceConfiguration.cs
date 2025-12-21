@@ -15,8 +15,11 @@ namespace PozorDomStoreService.Persistence.Configuratoins
 
             builder.HasOne(d => d.DeviceType)
                    .WithMany(dt => dt.Devices)
-                   .HasForeignKey(d => d.DeviceTypeId)
-                   .IsRequired();
+                   .HasForeignKey(d => d.DeviceTypeId);
+
+            builder.HasMany(d => d.DeviceSpecifications)
+                   .WithOne(ds => ds.Device)
+                   .HasForeignKey(ds => ds.DeviceId);
 
             builder.Property(d => d.Name)
                    .IsRequired()
