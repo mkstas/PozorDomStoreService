@@ -12,13 +12,15 @@ builder.Services.AddOpenApi();
 builder.Services.AddDatabaseContext(builder.Configuration);
 builder.Services.AddCorsConfiguration(builder.Configuration);
 
+builder.Services.AddScoped<IHubRepository, HubRepository>();
 builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
-builder.Services.AddScoped<IHubRepository, HubRepository>();
+builder.Services.AddScoped<ISpecificationRepository, SpecificationRepository>();
 
+builder.Services.AddScoped<IHubService, HubService>();
 builder.Services.AddScoped<IDeviceTypeService, DeviceTypeService>();
 builder.Services.AddScoped<IDeviceService, DeviceService>();
-builder.Services.AddScoped<IHubService, HubService>();
+builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 
 var app = builder.Build();
 

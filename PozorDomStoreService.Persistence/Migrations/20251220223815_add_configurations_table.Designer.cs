@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PozorDomStoreService.Persistence;
@@ -11,9 +12,11 @@ using PozorDomStoreService.Persistence;
 namespace PozorDomStoreService.Persistence.Migrations
 {
     [DbContext(typeof(PozorDomStoreServiceDbContext))]
-    partial class PozorDomStoreServiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251220223815_add_configurations_table")]
+    partial class add_configurations_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
