@@ -13,5 +13,6 @@
         public DeviceTypeEntity? DeviceType { get; set; }
         public List<DeviceSpecificationEntity> DeviceSpecifications { get; set; } = [];
         public List<CartDeviceEntity> CartDevices { get; set; } = [];
+        public List<OrderDeviceEntity> OrderDevices { get; set; } = [];
     }
 }

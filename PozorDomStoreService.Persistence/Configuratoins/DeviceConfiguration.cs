@@ -13,18 +13,6 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.Property(d => d.Id)
                    .ValueGeneratedOnAdd();
 
-            builder.HasOne(d => d.DeviceType)
-                   .WithMany(dt => dt.Devices)
-                   .HasForeignKey(d => d.DeviceTypeId);
-
-            builder.HasMany(d => d.DeviceSpecifications)
-                   .WithOne(ds => ds.Device)
-                   .HasForeignKey(ds => ds.DeviceId);
-
-            builder.HasMany(d => d.CartDevices)
-                   .WithOne(cd => cd.Device)
-                   .HasForeignKey(cd => cd.DeviceId);
-
             builder.Property(d => d.Name)
                    .IsRequired()
                    .HasMaxLength(128);
@@ -39,6 +27,22 @@ namespace PozorDomStoreService.Persistence.Configuratoins
 
             builder.Property(d => d.Price)
                    .IsRequired();
+
+            builder.HasOne(d => d.DeviceType)
+                   .WithMany(dt => dt.Devices)
+                   .HasForeignKey(d => d.DeviceTypeId);
+
+            builder.HasMany(d => d.DeviceSpecifications)
+                   .WithOne(ds => ds.Device)
+                   .HasForeignKey(ds => ds.DeviceId);
+
+            builder.HasMany(d => d.CartDevices)
+                   .WithOne(cd => cd.Device)
+                   .HasForeignKey(cd => cd.DeviceId);
+
+            builder.HasMany(d => d.OrderDevices)
+                   .WithOne(od => od.Device)
+                   .HasForeignKey(od => od.DeviceId);
 
             builder.Property(d => d.CreatedAt)
                    .HasColumnType("timestamp with time zone")

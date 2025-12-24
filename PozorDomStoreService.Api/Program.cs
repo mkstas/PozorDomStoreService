@@ -19,6 +19,8 @@ builder.Services.AddScoped<ISpecificationRepository, SpecificationRepository>();
 builder.Services.AddScoped<IDeviceSpecificationRepository, DeviceSpecificationRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartDeviceRepository, CartDeviceRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderDeviceRepository, OrderDeviceRepository>();
 
 builder.Services.AddScoped<IHubService, HubService>();
 builder.Services.AddScoped<IDeviceTypeService, DeviceTypeService>();
@@ -26,6 +28,7 @@ builder.Services.AddScoped<IDeviceService, DeviceService>();
 builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 builder.Services.AddScoped<IDeviceSpecificationService, DeviceSpecificationService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 var app = builder.Build();
 
