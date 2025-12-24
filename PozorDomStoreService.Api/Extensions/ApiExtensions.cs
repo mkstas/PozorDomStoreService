@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PozorDomStoreService.Api.Middlewares;
 using PozorDomStoreService.Persistence;
+using System.Security.Claims;
 
 namespace PozorDomStoreService.Api.Extensions
 {
@@ -16,6 +17,14 @@ namespace PozorDomStoreService.Api.Extensions
             this IApplicationBuilder builder)
         {
             builder.UseMiddleware<UserAuthHeadersHandler>();
+        }
+
+        public static Guid GetUserId(this ClaimsPrincipal principal)
+        {
+            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier)
+                ?? throw new InvalidOperationException("User ID claim not found.");
+
+            return Guid.Parse(userIdClaim.Value);
         }
 
         public static void AddCorsConfiguration(
