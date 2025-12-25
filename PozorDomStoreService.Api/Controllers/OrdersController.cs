@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PozorDomStoreService.Api.Contracts.Orders;
 using PozorDomStoreService.Api.Extensions;
-using PozorDomStoreService.Domain.Entities;
 using PozorDomStoreService.Domain.Interfaces.Services;
 
 namespace PozorDomStoreService.Api.Controllers
@@ -16,9 +15,9 @@ namespace PozorDomStoreService.Api.Controllers
         [HttpPost]
         public async Task<IResult> CreateOrderAsync([FromBody] CreateOrderRequest request)
         {
-            var order = await _orderService.AddDevicesToOrderAsync(User.GetUserId(), request.CartDevices);
+            var orderId = await _orderService.AddDevicesToOrderAsync(User.GetUserId(), request.CartDevices);
 
-            return Results.NoContent();
+            return Results.Ok(orderId);
         }
 
         [HttpGet]
@@ -31,7 +30,7 @@ namespace PozorDomStoreService.Api.Controllers
             return Results.Ok(reponse);
         }
 
-        [HttpGet("{id:guid}")]
+        [HttpGet("{orderId:guid}")]
         public async Task<IResult> GetOrderByOrderIdAsync([FromRoute] Guid orderId)
         {
             var order = await _orderService.GetOrderByOrderIdAsync(orderId);
