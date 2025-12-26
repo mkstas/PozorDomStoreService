@@ -6,8 +6,8 @@ namespace PozorDomStoreService.Domain.Interfaces.Services
     {
         Task<Guid> CreateSpecificationAsync(string name);
         Task<List<SpecificationEntity>> GetSpecificationAllAsync();
-        Task<SpecificationEntity> GetSpecificationByIdAsync(Guid id);
-        Task UpdateSpecificationAsync(Guid id, string name);
-        Task DeleteSpecificationAsync(Guid id);
+        Task<SpecificationEntity> GetSpecificationByIdAsync(Guid specificationId);
+        Task UpdateSpecificationByIdAsync(Guid specificationId, string name);
+        Task DeleteSpecificationByIdAsync(Guid specificationId);
     }
 }

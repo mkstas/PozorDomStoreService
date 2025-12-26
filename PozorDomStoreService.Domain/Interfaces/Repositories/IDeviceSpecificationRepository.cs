@@ -4,10 +4,10 @@ namespace PozorDomStoreService.Domain.Interfaces.Repositories
 {
     public interface IDeviceSpecificationRepository
     {
-        Task<Guid> CreateAsync(Guid deviceId, Guid specificationId);
-        Task<List<DeviceSpecificationEntity>> GetAllAsync();
-        Task<DeviceSpecificationEntity?> GetByIdAsync(Guid id);
-        Task<int> UpdateAsync(Guid id, Guid deviceId, Guid specificationId);
-        Task<int> DeleteAsync(Guid id);
+        Task<Guid> CreateDeviceSpecificationAsync(Guid deviceId, Guid specificationId);
+        Task<List<DeviceSpecificationEntity>> GetDeviceSpecificationAllAsync(Guid deviceId);
+        Task<DeviceSpecificationEntity?> GetDeviceSpecificationByIdAsync(Guid deviceSpecificationId);
+        Task<int> UpdateDeviceSpecificationByIdAsync(Guid deviceSpecificationId, Guid deviceId, Guid specificationId);
+        Task<int> DeleteDeviceSpecificationByIdAsync(Guid deviceSpecificationId);
     }
 }

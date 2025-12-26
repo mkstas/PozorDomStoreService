@@ -6,9 +6,8 @@ namespace PozorDomStoreService.Domain.Entities
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public string Address { get; set; } = string.Empty;
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
         public List<OrderDeviceEntity> OrderDevices { get; set; } = [];
     }
 }

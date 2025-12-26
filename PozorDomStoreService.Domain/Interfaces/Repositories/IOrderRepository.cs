@@ -5,10 +5,10 @@ namespace PozorDomStoreService.Domain.Interfaces.Repositories
 {
     public interface IOrderRepository
     {
-        Task<Guid> AddOrderAsync(Guid userId);
-        Task<List<OrderEntity>> GetOrdersByUserIdAsync(Guid userId);
-        Task<OrderEntity?> GetOrderByOrderIdAsync(Guid orderId);
-        Task<int> ChangeOrderStatusAsync(Guid orderId, OrderStatus status);
+        Task<Guid> CreateOrderAsync(Guid userId, string address);
+        Task<List<OrderEntity>> GetOrderAllByUserIdAsync(Guid userId);
+        Task<OrderEntity?> GetOrderByIdAsync(Guid orderId);
+        Task<int> UpdateOrderStatusByIdAsync(Guid orderId, OrderStatus status);
         Task<int> DeleteOrderByIdAsync(Guid orderId);
     }
 }
