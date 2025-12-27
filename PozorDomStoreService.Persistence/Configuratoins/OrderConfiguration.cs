@@ -14,26 +14,18 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.Property(o => o.UserId)
                    .IsRequired();
 
+            builder.Property(o => o.Address)
+                   .IsRequired()
+                   .HasMaxLength(256);
+
             builder.Property(o => o.Status)
+                   .IsRequired()
                    .HasDefaultValue(OrderStatus.Pending)
-                   .HasConversion<string>()
-                   .IsRequired();
+                   .HasConversion<string>();
 
             builder.HasMany(o => o.OrderDevices)
                    .WithOne(od => od.Order)
                    .HasForeignKey(od => od.OrderId);
-
-            builder.Property(dt => dt.CreatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAdd()
-                   .IsRequired();
-
-            builder.Property(dt => dt.UpdatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAddOrUpdate()
-                   .IsRequired();
         }
     }
 }

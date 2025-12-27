@@ -12,6 +12,7 @@ namespace PozorDomStoreService.Persistence.Repositories
         {
             var cartDevice = new CartDeviceEntity
             {
+                Id = Guid.NewGuid(),
                 CartId = cartId,
                 DeviceId = deviceId,
                 Quantity = quantity
@@ -21,7 +22,7 @@ namespace PozorDomStoreService.Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<CartDeviceEntity>> GetDevicesByCartIdAsync(Guid cartId)
+        public async Task<List<CartDeviceEntity>> GetCartDeviceAllByCartIdAsync(Guid cartId)
         {
             return await _context.CartDevices
                 .AsNoTracking()
@@ -29,18 +30,18 @@ namespace PozorDomStoreService.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> UpdateDeviceQuantityAsync(Guid id, int quantity)
+        public async Task<int> UpdateCartDeviceQuantityByIdAsync(Guid cartDeviceId, int quantity)
         {
             return await _context.CartDevices
-                .Where(cd => cd.Id == id)
-                .ExecuteUpdateAsync(setters => setters
+                .Where(cd => cd.Id == cartDeviceId)
+                .ExecuteUpdateAsync(s => s
                     .SetProperty(cd => cd.Quantity, quantity));
         }
 
-        public async Task<int> RemoveDeviceFromCartAsync(Guid id)
+        public async Task<int> RemoveCartDeviceFromCartByIdAsync(Guid cartDeviceId)
         {
             return await _context.CartDevices
-                .Where(cd => cd.Id == id)
+                .Where(cd => cd.Id == cartDeviceId)
                 .ExecuteDeleteAsync();
         }
     }

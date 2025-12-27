@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PozorDomStoreService.Domain.Entities;
 using PozorDomStoreService.Domain.Interfaces.Repositories;
+using PozorDomStoreService.Infrastructure.Exceptions;
+using PozorDomStoreService.Persistence.Extensions;
 
 namespace PozorDomStoreService.Persistence.Repositories
 {
@@ -8,31 +10,39 @@ namespace PozorDomStoreService.Persistence.Repositories
     {
         private readonly PozorDomStoreServiceDbContext _context = context;
 
-        public async Task<Guid> CreateAsync(Guid userId)
+        public async Task<Guid> CreateCartAsync(Guid userId)
         {
             var cart = new CartEntity
             {
                 Id = Guid.NewGuid(),
-                UserId = userId
+                UserId = userId,
             };
 
             await _context.Carts.AddAsync(cart);
-            await _context.SaveChangesAsync();
 
-            return cart.Id;
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                return cart.Id;
+            }
+            catch (DbUpdateException ex) when (ex.IsUniqueCreateConstraintViolation("IX_Carts_UserId"))
+            {
+                throw new ConflictException($"Cart with user ${userId} is already exists.");
+            }
         }
 
-        public async Task<CartEntity?> GetByUserIdAsync(Guid userId)
+        public async Task<CartEntity?> GetCartByUserIdAsync(Guid userId)
         {
             return await _context.Carts
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.UserId == userId);
         }
 
-        public Task<int> DeleteAsync(Guid id)
+        public Task<int> DeleteCartByIdAsync(Guid cartId)
         {
             return _context.Carts
-                .Where(c => c.Id == id)
+                .Where(c => c.Id == cartId)
                 .ExecuteDeleteAsync();
         }
     }

@@ -9,12 +9,13 @@ namespace PozorDomStoreService.Persistence.Repositories
     {
         private readonly PozorDomStoreServiceDbContext _context = context;
 
-        public async Task<Guid> AddOrderAsync(Guid userId)
+        public async Task<Guid> CreateOrderAsync(Guid userId, string address)
         {
             var order = new OrderEntity
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
+                Address = address
             };
 
             await _context.Orders.AddAsync(order);
@@ -23,7 +24,7 @@ namespace PozorDomStoreService.Persistence.Repositories
             return order.Id;
         }
 
-        public async Task<List<OrderEntity>> GetOrdersByUserIdAsync(Guid userId)
+        public async Task<List<OrderEntity>> GetOrderAllByUserIdAsync(Guid userId)
         {
             return await _context.Orders
                 .AsNoTracking()
@@ -31,25 +32,18 @@ namespace PozorDomStoreService.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<OrderEntity?> GetOrderByOrderIdAsync(Guid orderId)
+        public async Task<OrderEntity?> GetOrderByIdAsync(Guid orderId)
         {
             return await _context.Orders
                 .AsNoTracking()
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
-        public async Task<OrderEntity?> GetOrderByUserIdAsync(Guid userId)
-        {
-            return await _context.Orders
-                .AsNoTracking()
-                .FirstOrDefaultAsync(o => o.UserId == userId);
-        }
-
-        public async Task<int> ChangeOrderStatusAsync(Guid orderId, OrderStatus status)
+        public async Task<int> UpdateOrderStatusByIdAsync(Guid orderId, OrderStatus status)
         {
             return await _context.Orders
                 .Where(o => o.Id == orderId)
-                .ExecuteUpdateAsync(setters => setters
+                .ExecuteUpdateAsync(s => s
                     .SetProperty(o => o.Status, status));
         }
 

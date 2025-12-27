@@ -23,18 +23,6 @@ namespace PozorDomStoreService.Persistence.Configuratoins
                    .WithOne(cd => cd.Cart)
                    .HasForeignKey(cd => cd.CartId)
                    .OnDelete(DeleteBehavior.Cascade);
-
-            builder.Property(d => d.CreatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAdd()
-                   .IsRequired();
-
-            builder.Property(d => d.UpdatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAddOrUpdate()
-                   .IsRequired();
         }
     }
 }

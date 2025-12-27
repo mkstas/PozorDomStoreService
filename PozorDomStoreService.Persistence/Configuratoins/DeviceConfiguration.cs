@@ -13,9 +13,15 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.Property(d => d.Id)
                    .ValueGeneratedOnAdd();
 
+            builder.Property(d => d.DeviceTypeId)
+                   .IsRequired();
+
             builder.Property(d => d.Name)
                    .IsRequired()
                    .HasMaxLength(128);
+
+            builder.HasIndex(d => d.Name)
+                   .IsUnique();
 
             builder.Property(d => d.Description)
                    .HasDefaultValue(string.Empty)
@@ -43,18 +49,6 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.HasMany(d => d.OrderDevices)
                    .WithOne(od => od.Device)
                    .HasForeignKey(od => od.DeviceId);
-
-            builder.Property(d => d.CreatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAdd()
-                   .IsRequired();
-
-            builder.Property(d => d.UpdatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAddOrUpdate()
-                   .IsRequired();
         }
     }
 }

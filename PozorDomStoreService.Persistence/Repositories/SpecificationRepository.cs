@@ -11,7 +11,7 @@ namespace PozorDomStoreService.Persistence.Repositories
     {
         private readonly PozorDomStoreServiceDbContext _context = context;
 
-        public async Task<Guid> CreateAsync(string name)
+        public async Task<Guid> CreateSpecificationAsync(string name)
         {
             var specification = new SpecificationEntity
             {
@@ -29,43 +29,43 @@ namespace PozorDomStoreService.Persistence.Repositories
             }
             catch (DbUpdateException ex) when (ex.IsUniqueCreateConstraintViolation("IX_Specifications_Name"))
             {
-                throw new ConflictException("Specification already exists.");
+                throw new ConflictException($"Specification with name ${name} is already exists.");
             }
         }
 
-        public async Task<List<SpecificationEntity>> GetAllAsync()
+        public async Task<List<SpecificationEntity>> GetSpecificationAllAsync()
         {
             return await _context.Specifications
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<SpecificationEntity?> GetByIdAsync(Guid id)
+        public async Task<SpecificationEntity?> GetSpecificationByIdAsync(Guid specificationId)
         {
             return await _context.Specifications
                 .AsNoTracking()
-                .FirstOrDefaultAsync(s => s.Id == id);
+                .FirstOrDefaultAsync(s => s.Id == specificationId);
         }
 
-        public async Task<int> UpdateAsync(Guid id, string name)
+        public async Task<int> UpdateSpecificationByIdAsync(Guid specificationId, string name)
         {
             try
             {
                 return await _context.Specifications
-                    .Where(s => s.Id == id)
-                    .ExecuteUpdateAsync(setters => setters
+                    .Where(s => s.Id == specificationId)
+                    .ExecuteUpdateAsync(s => s
                         .SetProperty(s => s.Name, name));
             }
             catch (PostgresException ex) when (ex.IsUniqueUpdateKeyViolation("IX_Specifications_Name"))
             {
-                throw new ConflictException("Specification already exists.");
+                throw new ConflictException($"Specification with name ${name} is already exists.");
             }
         }
 
-        public async Task<int> DeleteAsync(Guid id)
+        public async Task<int> DeleteSpecificationByIdAsync(Guid specificationId)
         {
             return await _context.Specifications
-                .Where(s => s.Id == id)
+                .Where(s => s.Id == specificationId)
                 .ExecuteDeleteAsync();
         }
     }

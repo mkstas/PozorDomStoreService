@@ -17,6 +17,5 @@ namespace PozorDomStoreService.Persistence.Extensions
             return ex.SqlState == PostgresErrorCodes.UniqueViolation
                 && ex.ConstraintName == constraintName;
         }
-
     }
 }

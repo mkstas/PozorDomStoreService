@@ -8,7 +8,7 @@ namespace PozorDomStoreService.Persistence.Repositories
     {
         private readonly PozorDomStoreServiceDbContext _context = context;
 
-        public async Task<Guid> AddOrderDeviceAsync(Guid orderId, Guid deviceId, int quantity, double price)
+        public async Task<Guid> AddDeviceToOrderAsync(Guid orderId, Guid deviceId, int quantity, double price)
         {
             var orderDevice = new OrderDeviceEntity
             {
@@ -16,7 +16,7 @@ namespace PozorDomStoreService.Persistence.Repositories
                 OrderId = orderId,
                 DeviceId = deviceId,
                 Quantity = quantity,
-                Price = price,
+                Price = price
             };
 
             await _context.OrderDevices.AddAsync(orderDevice);
@@ -25,11 +25,11 @@ namespace PozorDomStoreService.Persistence.Repositories
             return orderDevice.Id;
         }
 
-        public async Task<List<OrderDeviceEntity>> GetOrderDevicesByOrderIdAsync(Guid orderId)
+        public async Task<List<OrderDeviceEntity>> GetOrderDeviceAllByOrderIdAsync(Guid orderId)
         {
             return await _context.OrderDevices
                 .AsNoTracking()
-                .Where(od => od.OrderId == orderId)
+                .Where(od =>  od.OrderId == orderId)
                 .ToListAsync();
         }
     }

@@ -19,6 +19,10 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.Property(cd => cd.DeviceId)
                    .IsRequired();
 
+            builder.Property(cd => cd.Quantity)
+                   .IsRequired()
+                   .HasDefaultValue(1);
+
             builder.HasOne(cd => cd.Cart)
                    .WithMany(c => c.CartDevices)
                    .HasForeignKey(cd => cd.CartId)
@@ -27,22 +31,6 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.HasOne(cd => cd.Device)
                    .WithMany(d => d.CartDevices)
                    .HasForeignKey(cd => cd.DeviceId);
-
-            builder.Property(cd => cd.Quantity)
-                   .IsRequired()
-                   .HasDefaultValue(1);
-
-            builder.Property(d => d.CreatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAdd()
-                   .IsRequired();
-
-            builder.Property(d => d.UpdatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAddOrUpdate()
-                   .IsRequired();
         }
     }
 }

@@ -29,18 +29,6 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.HasOne(od => od.Device)
                    .WithMany(d => d.OrderDevices)
                    .HasForeignKey(od => od.DeviceId);
-
-            builder.Property(dt => dt.CreatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAdd()
-                   .IsRequired();
-
-            builder.Property(dt => dt.UpdatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAddOrUpdate()
-                   .IsRequired();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace PozorDomStoreService.Persistence.Repositories
     {
         private readonly PozorDomStoreServiceDbContext _context = context;
 
-        public async Task<Guid> CreateAsync(Guid deviceId, Guid specificationId)
+        public async Task<Guid> CreateDeviceSpecificationAsync(Guid deviceId, Guid specificationId)
         {
             var deviceSpecification = new DeviceSpecificationEntity
             {
@@ -24,33 +24,33 @@ namespace PozorDomStoreService.Persistence.Repositories
             return deviceSpecification.Id;
         }
 
-        public Task<List<DeviceSpecificationEntity>> GetAllAsync()
+        public async Task<List<DeviceSpecificationEntity>> GetDeviceSpecificationAllAsync(Guid deviceId)
         {
-            return _context.DeviceSpecifications
+            return await _context.DeviceSpecifications
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public Task<DeviceSpecificationEntity?> GetByIdAsync(Guid id)
-        {
-            return _context.DeviceSpecifications
-                .AsNoTracking()
-                .FirstOrDefaultAsync(ds => ds.Id == id);    
-        }
-
-        public async Task<int> UpdateAsync(Guid id, Guid deviceId, Guid specificationId)
+        public async Task<DeviceSpecificationEntity?> GetDeviceSpecificationByIdAsync(Guid deviceSpecificationId)
         {
             return await _context.DeviceSpecifications
-                .Where(ds => ds.Id == id)
-                .ExecuteUpdateAsync(setters => setters
+                .AsNoTracking()
+                .FirstOrDefaultAsync(ds => ds.Id == deviceSpecificationId);
+        }
+
+        public async Task<int> UpdateDeviceSpecificationByIdAsync(Guid deviceSpecificationId, Guid deviceId, Guid specificationId)
+        {
+            return await _context.DeviceSpecifications
+                .Where(ds => ds.Id == deviceSpecificationId)
+                .ExecuteUpdateAsync(s => s
                     .SetProperty(ds => ds.DeviceId, deviceId)
                     .SetProperty(ds => ds.SpecificationId, specificationId));
         }
 
-        public Task<int> DeleteAsync(Guid id)
+        public async Task<int> DeleteDeviceSpecificationByIdAsync(Guid deviceSpecificationId)
         {
-            return _context.DeviceSpecifications
-                .Where(ds => ds.Id == id)
+            return await _context.DeviceSpecifications
+                .Where(ds => ds.Id == deviceSpecificationId)
                 .ExecuteDeleteAsync();
         }
     }

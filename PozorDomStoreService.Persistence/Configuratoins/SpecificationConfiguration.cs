@@ -13,28 +13,16 @@ namespace PozorDomStoreService.Persistence.Configuratoins
             builder.Property(s => s.Id)
                    .ValueGeneratedOnAdd();
 
-            builder.HasMany(s => s.DeviceSpecifications)
-                   .WithOne(ds => ds.Specification)
-                   .HasForeignKey(ds => ds.SpecificationId);
-
             builder.Property(s => s.Name)
                    .IsRequired()
-                   .HasMaxLength(128);
+                   .HasMaxLength(64);
 
             builder.HasIndex(s => s.Name)
                    .IsUnique();
 
-            builder.Property(s => s.CreatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAdd()
-                   .IsRequired();
-
-            builder.Property(s => s.UpdatedAt)
-                   .HasColumnType("timestamp with time zone")
-                   .HasDefaultValueSql("NOW()")
-                   .ValueGeneratedOnAddOrUpdate()
-                   .IsRequired();
+            builder.HasMany(s => s.DeviceSpecifications)
+                   .WithOne(ds => ds.Specification)
+                   .HasForeignKey(ds => ds.SpecificationId);
         }
     }
 }
