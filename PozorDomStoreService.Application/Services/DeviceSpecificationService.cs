@@ -16,51 +16,55 @@ namespace PozorDomStoreService.Application.Services
 
         public async Task<Guid> CreateDeviceSpecificationAsync(Guid deviceId, Guid specificationId)
         {
-            var device = await _deviceRepository.GetByIdAsync(deviceId)
-                ?? throw new NotFoundException("Device not found");
+            var device = await _deviceRepository.GetDeviceByIdAsync(deviceId)
+                ?? throw new NotFoundException($"Device with id {deviceId} does not exist.");
 
-            var specification = await _specificationRepository.GetByIdAsync(specificationId)
-                ?? throw new NotFoundException("Specification not found");
+            var specification = await _specificationRepository.GetSpecificationByIdAsync(specificationId)
+                ?? throw new NotFoundException($"Specification with id {specificationId} does not exist.");
 
-            return await _deviceSpecificationRepository.CreateAsync(device.Id, specification.Id);
+            return await _deviceSpecificationRepository.CreateDeviceSpecificationAsync(device.Id, specification.Id);
         }
 
-        public async Task<List<DeviceSpecificationEntity>> GetDeviceSpecificationAllAsync()
+        public async Task<List<DeviceSpecificationEntity>> GetDeviceSpecificationAllAsync(Guid deviceId)
         {
-            var deviceSpecifications = await _deviceSpecificationRepository.GetAllAsync();
+            var device = await _deviceRepository.GetDeviceByIdAsync(deviceId)
+                ?? throw new NotFoundException($"Device with id {deviceId} does not exist.");
+
+            var deviceSpecifications = await _deviceSpecificationRepository.GetDeviceSpecificationAllAsync(device.Id);
 
             if (deviceSpecifications.Count == 0)
-                throw new NotFoundException("Device specifications not found");
+                throw new NotFoundException($"Specifcations for device with id {device.Id} do not exist.");
 
             return deviceSpecifications;
         }
 
-        public async Task<DeviceSpecificationEntity> GetDeviceSpecificationByIdAsync(Guid id)
+        public async Task<DeviceSpecificationEntity> GetDeviceSpecificationByIdAsync(Guid deviceSpecificationId)
         {
-            return await _deviceSpecificationRepository.GetByIdAsync(id)
-                ?? throw new NotFoundException("Device specification not found");
+            return await _deviceSpecificationRepository.GetDeviceSpecificationByIdAsync(deviceSpecificationId)
+                ?? throw new NotFoundException($"Specifcation with id {deviceSpecificationId} does not exist.");
         }
 
-        public async Task UpdateDeviceSpecificationAsync(Guid id, Guid deviceId, Guid specificationId)
+        public async Task UpdateDeviceSpecificationByIdAsync(Guid deviceSpecificationId, Guid deviceId, Guid specificationId)
         {
-            var device = await _deviceRepository.GetByIdAsync(deviceId)
-                ?? throw new NotFoundException("Device not found");
+            var device = await _deviceRepository.GetDeviceByIdAsync(deviceId)
+                ?? throw new NotFoundException($"Device with id {deviceId} does not exist.");
 
-            var specification = await _specificationRepository.GetByIdAsync(specificationId)
-                ?? throw new NotFoundException("Specification not found");
+            var specification = await _specificationRepository.GetSpecificationByIdAsync(specificationId)
+                ?? throw new NotFoundException($"Specification with id {specificationId} does not exist.");
 
-            var rows = await _deviceSpecificationRepository.UpdateAsync(id, device.Id, specification.Id);
+            var rows = await _deviceSpecificationRepository
+                .UpdateDeviceSpecificationByIdAsync(deviceSpecificationId, device.Id, specification.Id);
 
             if (rows == 0)
-                throw new NotFoundException("Device specification not found");
+                throw new NotFoundException($"Specifcation with id {deviceSpecificationId} does not exist.");
         }
 
-        public async Task DeleteDeviceSpecificationAsync(Guid id)
+        public async Task DeleteDeviceSpecificationByIdAsync(Guid deviceSpecificationId)
         {
-            var rows = await _deviceSpecificationRepository.DeleteAsync(id);
+            var rows = await _deviceSpecificationRepository.DeleteDeviceSpecificationByIdAsync(deviceSpecificationId);
 
             if (rows == 0)
-                throw new NotFoundException("Device specification not found");
+                throw new NotFoundException($"Specifcation with id {deviceSpecificationId} does not exist.");
         }
     }
 }

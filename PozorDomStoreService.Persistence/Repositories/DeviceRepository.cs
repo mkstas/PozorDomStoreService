@@ -11,14 +11,13 @@ namespace PozorDomStoreService.Persistence.Repositories
     {
         private readonly PozorDomStoreServiceDbContext _context = context;
 
-        public async Task<Guid> CreateDeviceAsync(Guid deviceTypeId, string name, string description, string imageUrl, double price)
+        public async Task<Guid> CreateDeviceAsync(Guid deviceTypeId, string name, string description, double price)
         {
             var device = new DeviceEntity
             {
                 Id = Guid.NewGuid(),
                 Name = name,
                 Description = description,
-                ImageUrl = imageUrl,
                 Price = price
             };
 
@@ -50,7 +49,7 @@ namespace PozorDomStoreService.Persistence.Repositories
                 .FirstOrDefaultAsync(d => d.Id == deviceId);
         }
 
-        public async Task<int> UpdateDeviceByIdAsync(Guid deviceId, Guid deviceTypeId, string name, string description, string imageUrl, double price)
+        public async Task<int> UpdateDeviceByIdAsync(Guid deviceId, Guid deviceTypeId, string name, string description, double price)
         {
             try
             {
@@ -60,13 +59,20 @@ namespace PozorDomStoreService.Persistence.Repositories
                         .SetProperty(d => d.DeviceTypeId, deviceTypeId)
                         .SetProperty(d => d.Name, name)
                         .SetProperty(d => d.Description, description)
-                        .SetProperty(d => d.ImageUrl, imageUrl)
                         .SetProperty(d => d.Price, price));
             }
             catch (PostgresException ex) when (ex.IsUniqueUpdateKeyViolation("IX_Devices_Name"))
             {
                 throw new ConflictException($"Device with name ${name} is already exists.");
             }
+        }
+
+        public async Task<int> UpdateDeviceImageByIdAsync(Guid deviceId, string imageUrl)
+        {
+            return await _context.Devices
+                .Where(d => d.Id == deviceId)
+                .ExecuteUpdateAsync(s => s
+                    .SetProperty(s => s.ImageUrl, imageUrl));
         }
 
         public async Task<int> DeleteDeviceByIdAsync(Guid deviceId)

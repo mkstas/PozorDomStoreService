@@ -1,6 +1,7 @@
 ﻿using PozorDomStoreService.Domain.Entities;
 using PozorDomStoreService.Domain.Interfaces.Repositories;
 using PozorDomStoreService.Domain.Interfaces.Services;
+using PozorDomStoreService.Infrastructure.Exceptions;
 
 namespace PozorDomStoreService.Application.Services
 {
@@ -13,38 +14,37 @@ namespace PozorDomStoreService.Application.Services
 
         public async Task AddDeviceToCartAsync(Guid userId, Guid deviceId)
         {
-            var cartId = GetOrCreateCart(userId);
-            await _cartDeviceRepository.AddDeviceToCartAsync(await cartId, deviceId);
+            var cartId = await GetOrCreateCartAsync(userId);
+
+            await _cartDeviceRepository.AddDeviceToCartAsync(cartId, deviceId);
         }
 
-        private async Task<Guid> GetOrCreateCart(Guid userId)
+        private async Task<Guid> GetOrCreateCartAsync(Guid userId)
         {
-            var cart = await _cartRepository.GetByUserIdAsync(userId);
+            var cart = await _cartRepository.GetCartByUserIdAsync(userId);
 
             if (cart is null)
-                return await _cartRepository.CreateAsync(userId);
+                return await _cartRepository.CreateCartAsync(userId);
 
             return cart.Id;
         }
 
-        public async Task<List<CartDeviceEntity>> GetCartDevicesByUserIdAsync(Guid userId)
+        public async Task<List<CartDeviceEntity>> GetCartDeviceAllByUserIdAsync(Guid userId)
         {
-            var cart = await _cartRepository.GetByUserIdAsync(userId);
+            var cart = await _cartRepository.GetCartByUserIdAsync(userId)
+                ?? throw new NotFoundException($"Cart devices for user with id {userId} do not exist.");
 
-            if (cart is null)
-                return [];
-
-            return await _cartDeviceRepository.GetDevicesByCartIdAsync(cart.Id);
+            return await _cartDeviceRepository.GetCartDeviceAllByCartIdAsync(cart.Id);
         }
 
-        public async Task UpdateDeviceQuantityInCartAsync(Guid cartDeviceId, int quantity)
+        public async Task UpdateCartDeviceQuantityAsync(Guid cartDeviceId, int quantity)
         {
-            await _cartDeviceRepository.UpdateDeviceQuantityAsync(cartDeviceId, quantity);
+            await _cartDeviceRepository.UpdateCartDeviceQuantityByIdAsync(cartDeviceId, quantity);
         }
 
-        public async Task RemoveDeviceFromCartAsync(Guid cartDeviceId)
+        public async Task RemoveCartDeviceFromCartAsync(Guid cartDeviceId)
         {
-            await _cartDeviceRepository.RemoveDeviceFromCartAsync(cartDeviceId);
+            await _cartDeviceRepository.RemoveCartDeviceFromCartByIdAsync(cartDeviceId);
         }
     }
 }

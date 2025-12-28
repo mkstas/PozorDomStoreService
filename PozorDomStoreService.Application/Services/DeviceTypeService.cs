@@ -12,39 +12,39 @@ namespace PozorDomStoreService.Application.Services
 
         public async Task<Guid> CreateDeviceTypeAsync(string name)
         {
-            return await _deviceTypeRepository.CreateAsync(name);
+            return await _deviceTypeRepository.CreateDeviceTypeAsync(name);
         }
 
-        public async Task<List<DeviceTypeEntity>> GetAllDeviceTypeAsync()
+        public async Task<List<DeviceTypeEntity>> GetDeviceTypeAllAsync()
         {
-            var deviceTypes = await _deviceTypeRepository.GetAllAsync();
+            var deviceTypes = await _deviceTypeRepository.GetDeviceTypeAllAsync();
 
             if (deviceTypes.Count == 0)
-                throw new NotFoundException("Device types not found.");
+                throw new NotFoundException("Device types do not exist.");
 
             return deviceTypes;
         }
 
-        public async Task<DeviceTypeEntity> GetDeviceTypeByIdAsync(Guid id)
+        public async Task<DeviceTypeEntity> GetDeviceTypeByIdAsync(Guid devieTypeId)
         {
-            return await _deviceTypeRepository.GetByIdAsync(id)
-                ?? throw new NotFoundException("Device type not found.");
+            return await _deviceTypeRepository.GetDeviceTypeByIdAsync(devieTypeId)
+                ?? throw new NotFoundException($"Device type with id {devieTypeId} does not exist.");
         }
 
-        public async Task UpdateDeviceTypeAsync(Guid id, string name)
+        public async Task UpdateDeviceTypeByIdAsync(Guid devieTypeId, string name)
         {
-            var rows = await _deviceTypeRepository.UpdateAsync(id, name);
+            var rows = await _deviceTypeRepository.UpdateDeviceTypeByIdAsync(devieTypeId, name);
 
             if (rows == 0)
-                throw new NotFoundException("Device type not found.");
+                throw new NotFoundException($"Device type with id {devieTypeId} does not exist.");
         }
 
-        public async Task DeleteDeviceTypeAsync(Guid id)
+        public async Task DeleteDeviceTypeByIdAsync(Guid devieTypeId)
         {
-            var rows = await _deviceTypeRepository.DeleteAsync(id);
+            var rows = await _deviceTypeRepository.DeleteDeviceTypeByIdAsync(devieTypeId);
 
             if (rows == 0)
-                throw new NotFoundException("Device type not found.");
+                throw new NotFoundException($"Device type with id {devieTypeId} does not exist.");
         }
     }
 }

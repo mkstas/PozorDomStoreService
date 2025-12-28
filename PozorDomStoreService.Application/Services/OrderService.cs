@@ -14,36 +14,39 @@ namespace PozorDomStoreService.Application.Services
         private readonly IOrderDeviceRepository _orderDeviceRepository = orderDeviceRepository;
         private readonly IDeviceRepository _deviceRepository = deviceRepository;
 
-        public async Task<Guid> AddDevicesToOrderAsync(Guid userId, List<CartDeviceEntity> cartDevices)
+        public async Task<Guid> CreateOrderAsync(Guid userId, List<CartDeviceEntity> cartDevices, string address)
         {
-            var orderId = await _orderRepository.AddOrderAsync(userId);
+            var orderId = await _orderRepository.CreateOrderAsync(userId, address);
 
             foreach (var cartDevice in cartDevices)
             {
-                var device = await _deviceRepository.GetByIdAsync(cartDevice.Id);
+                var device = await _deviceRepository.GetDeviceByIdAsync(cartDevice.Id);
 
                 if (device is not null)
-                    await _orderDeviceRepository.AddOrderDeviceAsync(
-                        orderId, device.Id, cartDevice.Quantity, device.Price);
+                {
+                    await _orderDeviceRepository
+                        .AddDeviceToOrderAsync(orderId, device.Id, cartDevice.Quantity, device.Price);
+                }
+
             }
 
             return orderId;
         }
 
-        public async Task<List<OrderEntity>> GetOrdersByUserIdAsync(Guid userId)
+        public async Task<List<OrderEntity>> GetOrderAllByUserIdAsync(Guid userId)
         {
-            var orders = await _orderRepository.GetOrdersByUserIdAsync(userId);
+            var orders = await _orderRepository.GetOrderAllByUserIdAsync(userId);
 
             if (orders.Count == 0)
-                throw new NotFoundException("Orders not found.");
+                throw new NotFoundException($"Orders for user {userId} do not exist.");
 
             return orders;
         }
 
         public async Task<OrderEntity> GetOrderByOrderIdAsync(Guid orderId)
         {
-            return await _orderRepository.GetOrderByOrderIdAsync(orderId)
-                ?? throw new NotFoundException("Order not found.");
+            return await _orderRepository.GetOrderByIdAsync(orderId)
+                ?? throw new NotFoundException($"Order with id {orderId} does not exist.");
         }
     }
 }

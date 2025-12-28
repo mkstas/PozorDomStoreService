@@ -12,39 +12,39 @@ namespace PozorDomStoreService.Application.Services
 
         public async Task<Guid> CreateSpecificationAsync(string name)
         {
-            return await _specificationRepository.CreateAsync(name);
+            return await _specificationRepository.CreateSpecificationAsync(name);
         }
 
         public async Task<List<SpecificationEntity>> GetSpecificationAllAsync()
         {
-            var specifications = await _specificationRepository.GetAllAsync();
+            var specifications = await _specificationRepository.GetSpecificationAllAsync();
 
             if (specifications.Count == 0)
-                throw new NotFoundException("Specifications not found.");
+                throw new NotFoundException("Specifications do not exist.");
 
             return specifications;
         }
 
-        public async Task<SpecificationEntity> GetSpecificationByIdAsync(Guid id)
+        public async Task<SpecificationEntity> GetSpecificationByIdAsync(Guid specificationId)
         {
-            return await _specificationRepository.GetByIdAsync(id)
-                ?? throw new NotFoundException("Specification not found.");
+            return await _specificationRepository.GetSpecificationByIdAsync(specificationId)
+                ?? throw new NotFoundException($"Specification with id {specificationId} does not exist.");
         }
 
-        public async Task UpdateSpecificationAsync(Guid id, string name)
+        public async Task UpdateSpecificationByIdAsync(Guid specificationId, string name)
         {
-            var rows = await _specificationRepository.UpdateAsync(id, name);
+            var rows = await _specificationRepository.UpdateSpecificationByIdAsync(specificationId, name);
 
             if (rows == 0)
-                throw new NotFoundException("Specification not found.");
+                throw new NotFoundException($"Specification with id {specificationId} does not exist.");
         }
 
-        public async Task DeleteSpecificationAsync(Guid id)
+        public async Task DeleteSpecificationByIdAsync(Guid specificationId)
         {
-            var rows = await  _specificationRepository.DeleteAsync(id);
+            var rows = await _specificationRepository.DeleteSpecificationByIdAsync(specificationId);
 
             if (rows == 0)
-                throw new NotFoundException("Specification not found.");
+                throw new NotFoundException($"Specification with id {specificationId} does not exist.");
         }
     }
 }

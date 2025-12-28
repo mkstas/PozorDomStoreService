@@ -1,58 +1,70 @@
-﻿using PozorDomStoreService.Infrastructure.Exceptions;
+﻿using Microsoft.AspNetCore.Http;
 using PozorDomStoreService.Domain.Entities;
 using PozorDomStoreService.Domain.Interfaces.Repositories;
 using PozorDomStoreService.Domain.Interfaces.Services;
+using PozorDomStoreService.Infrastructure.Exceptions;
+using PozorDomStoreService.Infrastructure.Providers;
 
 namespace PozorDomStoreService.Application.Services
 {
     public class DeviceService(
         IDeviceTypeRepository deviceTypeRepository,
-        IDeviceRepository deviceRepository) : IDeviceService
+        IDeviceRepository deviceRepository,
+        IImageProvider imageProvider) : IDeviceService
     {
         private readonly IDeviceTypeRepository _deviceTypeRepository = deviceTypeRepository;
         private readonly IDeviceRepository _deviceRepository = deviceRepository;
+        private readonly IImageProvider _imageProvider = imageProvider;
 
-        public async Task<Guid> CreateDeviceAsync(Guid deviceTypeId, string name, string description, string imageUrl, double price)
+        public async Task<Guid> CreateDeviceAsync(Guid deviceTypeId, string name, string description, double price)
         {
-            var deviceType = await _deviceTypeRepository.GetByIdAsync(deviceTypeId)
-                ?? throw new NotFoundException("Device type does not existing.");
+            var deviceType = await _deviceTypeRepository.GetDeviceTypeByIdAsync(deviceTypeId)
+                ?? throw new NotFoundException("Device type does not exists."); ;
 
-            return await _deviceRepository.CreateAsync(deviceType.Id, name, description, imageUrl, price);
+            return await _deviceRepository.CreateDeviceAsync(deviceType.Id, name, description, price);
         }
 
-        public async Task<List<DeviceEntity>> GetAllDeviceAsync()
+        public async Task<List<DeviceEntity>> GetDeviceAllAsync()
         {
-            var devices = await _deviceRepository.GetAllAsync();
+            var devices = await _deviceRepository.GetDeviceAllAsync();
 
             if (devices.Count == 0)
-                throw new NotFoundException("Devices not found.");
+                throw new NotFoundException("Devices do not exist.");
 
             return devices;
         }
 
-        public async Task<DeviceEntity> GetDeviceByIdAsync(Guid id)
+        public async Task<DeviceEntity> GetDeviceByIdAsync(Guid deviceId)
         {
-            return await _deviceRepository.GetByIdAsync(id)
-                ?? throw new NotFoundException("Device not found.");
+            return await _deviceRepository.GetDeviceByIdAsync(deviceId)
+                ?? throw new NotFoundException($"Device with id {deviceId} does not exist.");
         }
 
-        public async Task UpdateDeviceAsync(Guid id, Guid deviceTypeId, string name, string description, string imageUrl, double price)
+        public async Task UpdateDeviceByIdAsync(Guid deviceId, Guid deviceTypeId, string name, string description, double price)
         {
-            var deviceType = await _deviceTypeRepository.GetByIdAsync(deviceTypeId)
-                ?? throw new NotFoundException("Device type does not existing.");
-
-            var rows = await _deviceRepository.UpdateAsync(id, deviceType.Id, name, description, imageUrl, price);
+            var rows = await _deviceRepository.UpdateDeviceByIdAsync(
+                deviceId, deviceTypeId, name, description, price);
 
             if (rows == 0)
-                throw new NotFoundException("Device not found.");
+                throw new NotFoundException($"Device with id {deviceId} does not exist.");
         }
 
-        public async Task DeleteDeviceAsync(Guid id)
+        public async Task UpdateDeviceImageByIdAsync(Guid deviceId, IFormFile image)
         {
-            var rows = await _deviceRepository.DeleteAsync(id);
+            var device = await _deviceRepository.GetDeviceByIdAsync(deviceId)
+                ?? throw new NotFoundException($"Device with id {deviceId} does not exist.");
+
+            var imageUrl = await _imageProvider.SaveSingleImage(image.OpenReadStream(), image.FileName);
+
+            await _deviceRepository.UpdateDeviceImageByIdAsync(device.Id, imageUrl);
+        }
+
+        public async Task DeleteDeviceByIdAsync(Guid deviceId)
+        {
+            var rows = await _deviceRepository.DeleteDeviceByIdAsync(deviceId);
 
             if (rows == 0)
-                throw new NotFoundException("Device not found.");
+                throw new NotFoundException($"Device with id {deviceId} does not exist.");
         }
     }
 }
