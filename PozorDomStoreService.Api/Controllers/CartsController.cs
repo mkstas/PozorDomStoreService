@@ -6,48 +6,39 @@ using PozorDomStoreService.Domain.Interfaces.Services;
 namespace PozorDomStoreService.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/store/carts")]
+    [Route("[controller]")]
     public class CartsController(
         ICartService cartService) : ControllerBase
     {
         private readonly ICartService _cartService = cartService;
 
-        //[HttpPost]
-        //public async Task<IResult> AddDeviceToCartAsync([FromBody] AddDeviceToCartRequest request)
-        //{
-        //    if (!Guid.TryParse(request.DeviceId, out Guid deviceId))
-        //        return Results.BadRequest("Invalid DeviceId format.");
-        //    await _cartService.AddDeviceToCartAsync(User.GetUserId(), deviceId);
+        [HttpPost]
+        public async Task<IActionResult> AddDeviceToCart([FromBody] AddDeviceToCartRequest request)
+        {
+            if (!Guid.TryParse(request.DeviceId, out var deviceId))
+                return BadRequest("Invalid DeviceId format.");
 
-        //    return Results.NoContent();
-        //}
+            await _cartService.AddDeviceToCartAsync(User.GetUserId(), deviceId);
 
-        //[HttpGet]
-        //public async Task<IResult> GetCartDevicesAsync()
-        //{
-        //    var cartDevices = await _cartService.GetCartDevicesByUserIdAsync(User.GetUserId());
-        //    List<CartDeviceResponse> response = [.. cartDevices.Select(cd => new CartDeviceResponse(
-        //        cd.Id, cd.CartId, cd.DeviceId, cd.Quantity))];
+            return NoContent();
+        }
 
-        //    return Results.Ok(response);
-        //}
+        [HttpPatch("{cartDeviceId:guid}/quantity")]
+        public async Task<IActionResult> UpdateCartDeviceQuantity(
+            [FromRoute] Guid cartDeviceId,
+            [FromBody] UpdateDeviceQuantityRequest request)
+        {
+            await _cartService.UpdateCartDeviceQuantityAsync(cartDeviceId, request.Quantity);
 
-        //[HttpPatch("{cartDeviceId:guid}/quantity")]
-        //public async Task<IResult> UpdateDeviceQuantityInCartAsync(
-        //    [FromRoute] Guid cartDeviceId,
-        //    [FromBody] UpdateDeviceQuantityRequest request)
-        //{
-        //    await _cartService.UpdateDeviceQuantityInCartAsync(cartDeviceId, request.Quantity);
+            return NoContent();
+        }
 
-        //    return Results.NoContent();
-        //}
+        [HttpDelete("{cartDeviceId:guid}")]
+        public async Task<IActionResult> RemoveCartDeviceFromCart([FromRoute] Guid cartDeviceId)
+        {
+            await _cartService.RemoveCartDeviceFromCartAsync(cartDeviceId);
 
-        //[HttpDelete("{cartDeviceId:guid}")]
-        //public async Task<IResult> RemoveDeviceFromCartAsync([FromRoute] Guid cartDeviceId)
-        //{
-        //    await _cartService.RemoveDeviceFromCartAsync(cartDeviceId);
-
-        //    return Results.NoContent();
-        //}
+            return NoContent();
+        }
     }
 }

@@ -6,37 +6,37 @@ using PozorDomStoreService.Domain.Interfaces.Services;
 namespace PozorDomStoreService.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/store/orders")]
+    [Route("[controller]")]
     public class OrdersController(
         IOrderService orderService) : ControllerBase
     {
         private readonly IOrderService _orderService = orderService;
 
-        //[HttpPost]
-        //public async Task<IResult> CreateOrderAsync([FromBody] CreateOrderRequest request)
-        //{
-        //    var orderId = await _orderService.AddDevicesToOrderAsync(User.GetUserId(), request.CartDevices);
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
+        {
+            var orderId = await _orderService.CreateOrderAsync(User.GetUserId(), request.CartDevices, request.Address);
 
-        //    return Results.Ok(orderId);
-        //}
+            return CreatedAtAction(nameof(GetOrderById), new { id = orderId });
+        }
 
-        //[HttpGet]
-        //public async Task<IResult> GetOrdersByUserId()
-        //{
-        //    var orders = await _orderService.GetOrdersByUserIdAsync(User.GetUserId());
-        //    List<OrderResponse> reponse = [.. orders.Select(
-        //        o => new OrderResponse(o.Id, o.UserId, o.Status))];
+        [HttpGet]
+        public async Task<IActionResult> GetOrderAllByUserId()
+        {
+            var orders = await _orderService.GetOrderAllByUserIdAsync(User.GetUserId());
+            List<OrderResponse> response = [.. orders.Select(o =>
+                new OrderResponse(o.Id, o.UserId, o.Address, o.Status.ToString(), o.OrderDevices))];
 
-        //    return Results.Ok(reponse);
-        //}
+            return Ok(response);
+        }
 
-        //[HttpGet("{orderId:guid}")]
-        //public async Task<IResult> GetOrderByOrderIdAsync([FromRoute] Guid orderId)
-        //{
-        //    var order = await _orderService.GetOrderByOrderIdAsync(orderId);
-        //    OrderResponse response = new(order.Id, order.UserId, order.Status);
+        [HttpGet("{orderId:guid}")]
+        public async Task<IActionResult> GetOrderById([FromRoute] Guid orderId)
+        {
+            var order = await _orderService.GetOrderByOrderIdAsync(orderId);
+            OrderResponse response = new(order.Id, order.UserId, order.Address, order.Status.ToString(), order.OrderDevices);
 
-        //    return Results.Ok(response);
-        //}
+            return Ok(response);
+        }
     }
 }

@@ -40,13 +40,24 @@ namespace PozorDomStoreService.Application.Services
             if (orders.Count == 0)
                 throw new NotFoundException($"Orders for user {userId} do not exist.");
 
+            foreach (var order in orders)
+            {
+                var orderDevices = await _orderDeviceRepository.GetOrderDeviceAllByOrderIdAsync(order.Id);
+                order.OrderDevices = orderDevices;
+            }
+
             return orders;
         }
 
         public async Task<OrderEntity> GetOrderByOrderIdAsync(Guid orderId)
         {
-            return await _orderRepository.GetOrderByIdAsync(orderId)
+            var order = await _orderRepository.GetOrderByIdAsync(orderId)
                 ?? throw new NotFoundException($"Order with id {orderId} does not exist.");
+
+            var orderDevices = await _orderDeviceRepository.GetOrderDeviceAllByOrderIdAsync(order.Id);
+            order.OrderDevices = orderDevices;
+
+            return order;
         }
     }
 }
