@@ -1,67 +1,78 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PozorDomStoreService.Api.Contracts.Device;
+using PozorDomStoreService.Api.Contracts.Devices;
 using PozorDomStoreService.Domain.Interfaces.Services;
 
 namespace PozorDomStoreService.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/store/devices")]
+    [Route("[controller]")]
     public class DevicesController(
         IDeviceService deviceService) : ControllerBase
     {
         private readonly IDeviceService _deviceService = deviceService;
 
         [HttpPost]
-        public async Task<IResult> CreateDevice([FromBody] CreateDeviceRequest request)
+        public async Task<IActionResult> CreateDevice([FromBody] CreateDeviceRequest request)
         {
             if (!Guid.TryParse(request.DeviceTypeId, out Guid deviceTypeId))
-                return Results.BadRequest("Invalid DeviceTypeId format.");
+                return BadRequest("Invalid DeviceTypeId format.");
 
-            var result = await _deviceService.CreateDeviceAsync(
-                deviceTypeId, request.Name, request.Description, string.Empty, request.Price);
+            var deviceId = await _deviceService.CreateDeviceAsync(
+                deviceTypeId, request.Name, request.Description, request.Price);
 
-            return Results.Created($"/api/devices/{result}", result);
+            return CreatedAtAction(nameof(GetDeviceById), new { id = deviceId });
         }
 
         [HttpGet]
-        public async Task<IResult> GetAllDevices()
+        public async Task<IActionResult> GetDeviceAll()
         {
-            var result = await _deviceService.GetAllDeviceAsync();
-            List<DeviceResponse> response =
-                [.. result.Select(d => new DeviceResponse(
-                    d.Id, d.DeviceTypeId, d.Name, d.Description, d.ImageUrl, d.Price))];
+            var devices = await _deviceService.GetDeviceAllAsync();
+            List<DeviceResponse> response = [.. devices.Select(d => 
+                new DeviceResponse(d.Id, d.DeviceTypeId, d.Name, d.Description, d.ImageUrl, d.Price))];
 
-            return Results.Ok(response);
+            return Ok(response);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IResult> GetDeviceById([FromRoute] Guid id)
+        [HttpGet("{deviceId:guid}")]
+        public async Task<IActionResult> GetDeviceById([FromRoute] Guid deviceId)
         {
-                var result = await _deviceService.GetDeviceByIdAsync(id);
-                DeviceResponse response = 
-                    new(result.Id, result.DeviceTypeId, result.Name, result.Description, result.ImageUrl, result.Price);
+            var device = await _deviceService.GetDeviceByIdAsync(deviceId);
+            DeviceResponse response =
+                new(device.Id, device.DeviceTypeId, device.Name, device.Description, device.ImageUrl, device.Price);
 
-                return Results.Ok(response);
+            return Ok(response);
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<IResult> UpdateDevice([FromRoute] Guid id, [FromBody] UpdateDeviceRequest request)
+        [HttpPut("{deviceId:guid}")]
+        public async Task<IActionResult> UpdateDeviceById(
+            [FromRoute] Guid deviceId,
+            [FromBody] UpdateDeviceRequest request)
         {
             if (!Guid.TryParse(request.DeviceTypeId, out Guid deviceTypeId))
-                return Results.BadRequest("Invalid DeviceTypeId format.");
+                return BadRequest("Invalid DeviceTypeId format.");
 
-            await _deviceService.UpdateDeviceAsync(
-                id, deviceTypeId, request.Name, request.Description, string.Empty, request.Price);
+            await _deviceService.UpdateDeviceByIdAsync(
+                deviceId, deviceTypeId, request.Name, request.Description, request.Price);
 
-            return Results.NoContent();
+            return NoContent();
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IResult> DeleteDevice([FromRoute] Guid id)
+        [HttpPatch("{deviceId:guid}/image")]
+        public async Task<IActionResult> UpdateDeviceImageById(
+            [FromRoute] Guid deviceId,
+            IFormFile image)
         {
-            await _deviceService.DeleteDeviceAsync(id);
+            await _deviceService.UpdateDeviceImageByIdAsync(deviceId, image);
 
-            return Results.NoContent();
+            return NoContent();
+        }
+
+        [HttpDelete("{deviceId:guid}")]
+        public async Task<IActionResult> DeleteDeviceById([FromRoute] Guid deviceId)
+        {
+            await _deviceService.DeleteDeviceByIdAsync(deviceId);
+
+            return NoContent();
         }
     }
 }

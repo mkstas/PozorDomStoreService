@@ -1,4 +1,4 @@
-﻿namespace PozorDomStoreService.Api.Contracts.Device
+﻿namespace PozorDomStoreService.Api.Contracts.Devices
 {
     public record DeviceResponse(
         Guid Id,
@@ -6,6 +6,5 @@
         string Name,
         string Description,
         string ImageUrl,
-        double Price
-    );
+        double Price);
 }

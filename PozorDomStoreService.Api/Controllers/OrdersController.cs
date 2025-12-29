@@ -12,31 +12,31 @@ namespace PozorDomStoreService.Api.Controllers
     {
         private readonly IOrderService _orderService = orderService;
 
-        [HttpPost]
-        public async Task<IResult> CreateOrderAsync([FromBody] CreateOrderRequest request)
-        {
-            var orderId = await _orderService.AddDevicesToOrderAsync(User.GetUserId(), request.CartDevices);
+        //[HttpPost]
+        //public async Task<IResult> CreateOrderAsync([FromBody] CreateOrderRequest request)
+        //{
+        //    var orderId = await _orderService.AddDevicesToOrderAsync(User.GetUserId(), request.CartDevices);
 
-            return Results.Ok(orderId);
-        }
+        //    return Results.Ok(orderId);
+        //}
 
-        [HttpGet]
-        public async Task<IResult> GetOrdersByUserId()
-        {
-            var orders = await _orderService.GetOrdersByUserIdAsync(User.GetUserId());
-            List<OrderResponse> reponse = [.. orders.Select(
-                o => new OrderResponse(o.Id, o.UserId, o.Status))];
+        //[HttpGet]
+        //public async Task<IResult> GetOrdersByUserId()
+        //{
+        //    var orders = await _orderService.GetOrdersByUserIdAsync(User.GetUserId());
+        //    List<OrderResponse> reponse = [.. orders.Select(
+        //        o => new OrderResponse(o.Id, o.UserId, o.Status))];
 
-            return Results.Ok(reponse);
-        }
+        //    return Results.Ok(reponse);
+        //}
 
-        [HttpGet("{orderId:guid}")]
-        public async Task<IResult> GetOrderByOrderIdAsync([FromRoute] Guid orderId)
-        {
-            var order = await _orderService.GetOrderByOrderIdAsync(orderId);
-            OrderResponse response = new(order.Id, order.UserId, order.Status);
+        //[HttpGet("{orderId:guid}")]
+        //public async Task<IResult> GetOrderByOrderIdAsync([FromRoute] Guid orderId)
+        //{
+        //    var order = await _orderService.GetOrderByOrderIdAsync(orderId);
+        //    OrderResponse response = new(order.Id, order.UserId, order.Status);
 
-            return Results.Ok(response);
-        }
+        //    return Results.Ok(response);
+        //}
     }
 }

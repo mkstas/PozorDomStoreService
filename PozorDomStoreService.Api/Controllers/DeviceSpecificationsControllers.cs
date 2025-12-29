@@ -1,69 +1,72 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PozorDomStoreService.Api.Contracts.DeviceSpecification;
+using PozorDomStoreService.Api.Contracts.Devices.DeviceSpecifications;
 using PozorDomStoreService.Domain.Interfaces.Services;
 
 namespace PozorDomStoreService.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/store/device_specifications")]
+    [Route("[controller]")]
     public class DeviceSpecificationsControllers(
         IDeviceSpecificationService deviceSpecificationService) : ControllerBase
     {
         private readonly IDeviceSpecificationService _deviceSpecificationService = deviceSpecificationService;
 
         [HttpPost]
-        public async Task<IResult> CreateSpecification([FromBody] CreateDeviceSpecificationRequest request)
+        public async Task<IActionResult> CreateDeviceSpecification([FromBody] CreateDeviceSpecificationRequest request)
         {
             if (!Guid.TryParse(request.DeviceId, out Guid deviceId))
-                return Results.BadRequest("Invalid deviceId format.");
+                return BadRequest("Invalid deviceId format.");
 
             if (!Guid.TryParse(request.SpecificationId, out Guid specificationId))
-                return Results.BadRequest("Invalid specificationId format.");
+                return BadRequest("Invalid specificationId format.");
 
-            var result = await _deviceSpecificationService.CreateDeviceSpecificationAsync(deviceId, specificationId);
+            var deviceSpecificationId = await _deviceSpecificationService.CreateDeviceSpecificationAsync(deviceId, specificationId);
 
-            return Results.Created($"/api/v1/store/device_specifications{result}", result);
+            return CreatedAtAction(nameof(GetDeviceSpecificationById), new { id = deviceSpecificationId });
         }
 
-        [HttpGet]
-        public async Task<IResult> GetAllSpecifications()
+        [HttpGet("{deviceId:guid}/device")]
+        public async Task<IActionResult> GetDeviceSpecificationAll([FromRoute] Guid deviceId)
         {
-            var result = await _deviceSpecificationService.GetDeviceSpecificationAllAsync();
-            List<DeviceSpecificationResponse> response =
-                [.. result.Select(ds => new DeviceSpecificationResponse(ds.Id, ds.DeviceId, ds.SpecificationId))];
+            var deviceSpecifications = await _deviceSpecificationService.GetDeviceSpecificationAllAsync(deviceId);
+            List<DeviceSpecificationResponse> response = [.. deviceSpecifications.Select(ds =>
+                new DeviceSpecificationResponse(ds.Id, ds.DeviceId, ds.SpecificationId))];
 
-            return Results.Ok(response);
+            return Ok(response);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IResult> GetSpecificationById([FromRoute] Guid id)
+        [HttpGet("{deviceSpecificationId:guid}")]
+        public async Task<IActionResult> GetDeviceSpecificationById([FromRoute] Guid deviceSpecificationId)
         {
-            var result = await _deviceSpecificationService.GetDeviceSpecificationByIdAsync(id);
-            DeviceSpecificationResponse response = new(result.Id, result.DeviceId, result.SpecificationId);
+            var deviceSpecification = await _deviceSpecificationService.GetDeviceSpecificationByIdAsync(deviceSpecificationId);
+            DeviceSpecificationResponse response =
+                new(deviceSpecification.Id, deviceSpecification.DeviceId, deviceSpecification.SpecificationId);
 
-            return Results.Ok(response);
+            return Ok(response);
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<IResult> UpdateSpecification([FromRoute] Guid id, [FromBody] UpdateDeviceSpecificationRequest request)
+        [HttpPut("{deviceSpecificationId:guid}")]
+        public async Task<IActionResult> UpdateDeviceSpecificationById(
+            [FromRoute] Guid deviceSpecificationId,
+            [FromBody] UpdateDeviceSpecificationRequest request)
         {
             if (!Guid.TryParse(request.DeviceId, out Guid deviceId))
-                return Results.BadRequest("Invalid deviceId format.");
+                return BadRequest("Invalid deviceId format.");
 
             if (!Guid.TryParse(request.SpecificationId, out Guid specificationId))
-                return Results.BadRequest("Invalid specificationId format.");
+                return BadRequest("Invalid specificationId format.");
 
-            await _deviceSpecificationService.UpdateDeviceSpecificationAsync(id, deviceId, specificationId);
+            await _deviceSpecificationService.UpdateDeviceSpecificationByIdAsync(deviceSpecificationId, deviceId, specificationId);
 
-            return Results.NoContent();
+            return NoContent();
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IResult> DeleteSpecification([FromRoute] Guid id)
+        [HttpDelete("{deviceSpecificationId:guid}")]
+        public async Task<IActionResult> DeleteDeviceSpecificationById([FromRoute] Guid deviceSpecificationId)
         {
-            await _deviceSpecificationService.DeleteDeviceSpecificationAsync(id);
+            await _deviceSpecificationService.DeleteDeviceSpecificationByIdAsync(deviceSpecificationId);
 
-            return Results.NoContent();
+            return NoContent();
         }
     }
 }

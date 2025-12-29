@@ -1,57 +1,59 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PozorDomStoreService.Api.Contracts.DeviceType;
+using PozorDomStoreService.Api.Contracts.Devices.DeviceTypes;
 using PozorDomStoreService.Domain.Interfaces.Services;
 
 namespace PozorDomStoreService.Api.Controllers
 {
     [ApiController]
-    [Route("api/v1/store/device_types")]
+    [Route("[controller]")]
     public class DeviceTypesController(
         IDeviceTypeService deviceTypeService) : ControllerBase
     {
         private readonly IDeviceTypeService _deviceTypeService = deviceTypeService;
 
         [HttpPost]
-        public async Task<IResult> CreateDeviceType([FromBody] CreateDeviceTypeRequest request)
+        public async Task<IActionResult> CreateDeviceType([FromBody] CreateDeviceTypeRequest request)
         {
-            var result = await _deviceTypeService.CreateDeviceTypeAsync(request.Name);
+            var deviceTypeId = await _deviceTypeService.CreateDeviceTypeAsync(request.Name);
 
-            return Results.Created($"/device_types/{result}", result);
+            return CreatedAtAction(nameof(GetDeviceTypeById), new { id = deviceTypeId });
         }
 
         [HttpGet]
-        public async Task<IResult> GetAllDeviceTypes()
+        public async Task<IActionResult> GetDeviceTypeAll()
         {
-            var result = await _deviceTypeService.GetAllDeviceTypeAsync();
+            var deviceTypes = await _deviceTypeService.GetDeviceTypeAllAsync();
             List<DeviceTypeResponse> response =
-                [.. result.Select(dt => new DeviceTypeResponse(dt.Id, dt.Name))];
+                [.. deviceTypes.Select(dt => new DeviceTypeResponse(dt.Id, dt.Name))];
 
-            return Results.Ok(response);
+            return Ok(response);
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IResult> GetDeviceTypeById([FromRoute] Guid id)
+        [HttpGet("{deviceTypeId:guid}")]
+        public async Task<IActionResult> GetDeviceTypeById([FromRoute] Guid deviceTypeId)
         {
-            var result = await _deviceTypeService.GetDeviceTypeByIdAsync(id);
-            DeviceTypeResponse response = new(result.Id, result.Name);
+            var deviceType = await _deviceTypeService.GetDeviceTypeByIdAsync(deviceTypeId);
+            DeviceTypeResponse response = new(deviceType.Id, deviceType.Name);
 
-            return Results.Ok(response);
+            return Ok(response);
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<IResult> UpdateDeviceType([FromRoute] Guid id, [FromBody] UpdateDeviceTypeRequest request)
+        [HttpPut("{deviceTypeId:guid}")]
+        public async Task<IActionResult> UpdateDeviceTypeById(
+            [FromRoute] Guid deviceTypeId,
+            [FromBody] UpdateDeviceTypeRequest request)
         {
-            await _deviceTypeService.UpdateDeviceTypeAsync(id, request.Name);
+            await _deviceTypeService.UpdateDeviceTypeByIdAsync(deviceTypeId, request.Name);
 
-            return Results.NoContent();
+            return NoContent();
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IResult> DeleteDeviceType([FromRoute] Guid id)
+        [HttpDelete("{deviceTypeId:guid}")]
+        public async Task<IActionResult> DeleteDeviceTypeById([FromRoute] Guid deviceTypeId)
         {
-            await _deviceTypeService.DeleteDeviceTypeAsync(id);
+            await _deviceTypeService.DeleteDeviceTypeByIdAsync(deviceTypeId);
 
-            return Results.NoContent();
+            return NoContent();
         }
     }
 }
