@@ -1,23 +1,18 @@
-﻿namespace PozorDomStoreService.Infrastructure.Providers
-{
-    public class ImageProvider : IImageProvider
-    {
-        private readonly string _baseStoragePath;
-        private readonly string[] _allowedImageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+﻿using Microsoft.Extensions.Options;
 
-        public ImageProvider(string baseStoragePath)
-        {
-            _baseStoragePath = baseStoragePath ?? throw new ArgumentNullException(nameof(baseStoragePath));
-            if (!Directory.Exists(_baseStoragePath))
-                throw new ArgumentException($"Base storage path does not exist: {_baseStoragePath}", nameof(baseStoragePath));
-        }
+namespace PozorDomStoreService.Infrastructure.Providers
+{
+    public class ImageProvider(IOptions<StorageOptions> options) : IImageProvider
+    {
+        private readonly StorageOptions _options = options.Value;
+        private readonly string[] _allowedImageExtensions = [".jpg", ".jpeg", ".png", ".gif"];
 
         public async Task<string> SaveSingleImage(Stream imageStream, string originalFileName, string destination = "uploads")
         {
             ValidateImageStream(imageStream);
             ValidateImageExtension(originalFileName);
 
-            var absoluteDestinationPath = Path.Combine(_baseStoragePath, destination);
+            var absoluteDestinationPath = Path.Combine(_options.UploadsPath, destination);
             Directory.CreateDirectory(absoluteDestinationPath);
 
             var fileName = GenerateFileName(originalFileName);
@@ -36,10 +31,10 @@
 
             // Защита от path traversal
             var normalizedRelative = Path.GetFullPath(relativePath.Replace('/', Path.DirectorySeparatorChar));
-            var fullPath = Path.Combine(_baseStoragePath, normalizedRelative);
+            var fullPath = Path.Combine(_options.UploadsPath, normalizedRelative);
 
             // Убедимся, что путь всё ещё внутри _baseStoragePath (защита от ../ атак)
-            if (!fullPath.StartsWith(_baseStoragePath, StringComparison.OrdinalIgnoreCase))
+            if (!fullPath.StartsWith(_options.UploadsPath, StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("Invalid path: attempted directory traversal.", nameof(relativePath));
 
             if (File.Exists(fullPath))

@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using PozorDomStoreService.Api.Middlewares;
+using PozorDomStoreService.Infrastructure.Providers;
 using PozorDomStoreService.Persistence;
 using System.Security.Claims;
 
@@ -17,6 +19,16 @@ namespace PozorDomStoreService.Api.Extensions
             this IApplicationBuilder builder)
         {
             builder.UseMiddleware<UserAuthHeadersHandler>();
+        }
+
+        public static void AddStorageConfiguration(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            var storageOptions = configuration.GetSection(nameof(StorageOptions))
+                ?? throw new InvalidOperationException("StorageOptions not configured.");
+
+            services.Configure<StorageOptions>(storageOptions);
         }
 
         public static Guid GetUserId(this ClaimsPrincipal principal)

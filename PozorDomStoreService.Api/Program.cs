@@ -2,6 +2,7 @@ using PozorDomStoreService.Api.Extensions;
 using PozorDomStoreService.Application.Services;
 using PozorDomStoreService.Domain.Interfaces.Repositories;
 using PozorDomStoreService.Domain.Interfaces.Services;
+using PozorDomStoreService.Infrastructure.Providers;
 using PozorDomStoreService.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDatabaseContext(builder.Configuration);
 builder.Services.AddCorsConfiguration(builder.Configuration);
+builder.Services.AddStorageConfiguration(builder.Configuration);
 
 builder.Services.AddScoped<IDeviceTypeRepository, DeviceTypeRepository>();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
@@ -27,6 +29,7 @@ builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 builder.Services.AddScoped<IDeviceSpecificationService, DeviceSpecificationService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IImageProvider, ImageProvider>();
 
 var app = builder.Build();
 
