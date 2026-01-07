@@ -29,6 +29,7 @@ builder.Services.AddScoped<ISpecificationService, SpecificationService>();
 builder.Services.AddScoped<IDeviceSpecificationService, DeviceSpecificationService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+
 builder.Services.AddScoped<IImageProvider, ImageProvider>();
 
 var app = builder.Build();
@@ -38,8 +39,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseCors();
 app.UseGlobalExceptionHandler();
 app.UseUserAuthHeadersHandler();
-app.UseCors();
-app.MapControllers();
+app.MapGroup("api/v1/store").WithTags("v1").MapControllers();
 app.Run();
