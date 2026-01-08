@@ -62,7 +62,7 @@ namespace PozorDomStoreService.Api.Controllers
             [FromRoute] Guid deviceId,
             IFormFile image)
         {
-            await _deviceService.UpdateDeviceImageByIdAsync(deviceId, image);
+            await _deviceService.UpdateDeviceImageByIdAsync(deviceId, image.OpenReadStream(), image.FileName);
 
             return NoContent();
         }

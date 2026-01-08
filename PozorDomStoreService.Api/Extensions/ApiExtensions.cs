@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PozorDomStoreService.Api.Middlewares;
 using PozorDomStoreService.Infrastructure.Providers;
+using PozorDomStoreService.Infrastructure.Providers.Images;
 using PozorDomStoreService.Persistence;
 using System.Security.Claims;
 
@@ -25,10 +26,10 @@ namespace PozorDomStoreService.Api.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var storageOptions = configuration.GetSection(nameof(StorageOptions))
-                ?? throw new InvalidOperationException("StorageOptions not configured.");
+            var storageOptions = configuration.GetSection(nameof(ImageOptions))
+                ?? throw new InvalidOperationException("ImageOptions not configured.");
 
-            services.Configure<StorageOptions>(storageOptions);
+            services.Configure<ImageOptions>(storageOptions);
         }
 
         public static Guid GetUserId(this ClaimsPrincipal principal)

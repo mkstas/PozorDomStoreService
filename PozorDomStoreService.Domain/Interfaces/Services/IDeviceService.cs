@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using PozorDomStoreService.Domain.Entities;
+﻿using PozorDomStoreService.Domain.Entities;
 
 namespace PozorDomStoreService.Domain.Interfaces.Services
 {
@@ -11,7 +10,7 @@ namespace PozorDomStoreService.Domain.Interfaces.Services
         Task<DeviceEntity> GetDeviceByIdAsync(Guid deviceId);
         Task UpdateDeviceByIdAsync(
             Guid deviceId, Guid deviceTypeId, string name, string description, double price);
-        Task UpdateDeviceImageByIdAsync(Guid deviceId, IFormFile image);
+        Task UpdateDeviceImageByIdAsync(Guid deviceId, Stream imageStream, string originalName);
         Task DeleteDeviceByIdAsync(Guid deviceId);
     }
 }

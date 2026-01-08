@@ -3,7 +3,7 @@ using PozorDomStoreService.Domain.Entities;
 using PozorDomStoreService.Domain.Interfaces.Repositories;
 using PozorDomStoreService.Domain.Interfaces.Services;
 using PozorDomStoreService.Infrastructure.Exceptions;
-using PozorDomStoreService.Infrastructure.Providers;
+using PozorDomStoreService.Infrastructure.Providers.Images;
 
 namespace PozorDomStoreService.Application.Services
 {
@@ -49,12 +49,13 @@ namespace PozorDomStoreService.Application.Services
                 throw new NotFoundException($"Device with id {deviceId} does not exist.");
         }
 
-        public async Task UpdateDeviceImageByIdAsync(Guid deviceId, IFormFile image)
+        public async Task UpdateDeviceImageByIdAsync(Guid deviceId, Stream imageStream, string originalName)
         {
             var device = await _deviceRepository.GetDeviceByIdAsync(deviceId)
                 ?? throw new NotFoundException($"Device with id {deviceId} does not exist.");
 
-            var imageUrl = await _imageProvider.SaveSingleImage(image.OpenReadStream(), image.FileName);
+            await _imageProvider.DeleteSingleImage(device.ImageUrl);
+            var imageUrl = await _imageProvider.SaveSingleImage(imageStream, originalName);
 
             await _deviceRepository.UpdateDeviceImageByIdAsync(device.Id, imageUrl);
         }

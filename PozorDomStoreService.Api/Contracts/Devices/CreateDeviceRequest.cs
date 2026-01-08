@@ -11,7 +11,7 @@ namespace PozorDomStoreService.Api.Contracts.Devices
         [MaxLength(128, ErrorMessage = "Name cannot exceed 128 characters.")]
         string Name,
 
-        [MaxLength(1024, ErrorMessage = "Name cannot exceed 1024 characters.")]
+        [MaxLength(1024, ErrorMessage = "Description cannot exceed 1024 characters.")]
         string Description,
 
         [Required(ErrorMessage = "Price is required.")]

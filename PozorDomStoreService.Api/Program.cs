@@ -2,7 +2,7 @@ using PozorDomStoreService.Api.Extensions;
 using PozorDomStoreService.Application.Services;
 using PozorDomStoreService.Domain.Interfaces.Repositories;
 using PozorDomStoreService.Domain.Interfaces.Services;
-using PozorDomStoreService.Infrastructure.Providers;
+using PozorDomStoreService.Infrastructure.Providers.Images;
 using PozorDomStoreService.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);

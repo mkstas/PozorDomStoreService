@@ -16,6 +16,7 @@ namespace PozorDomStoreService.Persistence.Repositories
             var device = new DeviceEntity
             {
                 Id = Guid.NewGuid(),
+                DeviceTypeId = deviceTypeId,
                 Name = name,
                 Description = description,
                 Price = price
